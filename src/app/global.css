@@ -1,0 +1,4 @@
+.rs-picker-popup-daterange{
+    z-index: 1000;
+    position: fixed;
+}
