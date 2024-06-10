@@ -10,31 +10,71 @@ import {
 } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import DashboardCard from "@/app/(DashboardLayout)/components/shared/DashboardCard";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IconChevronRight } from "@tabler/icons-react";
 import Link from "next/link";
 import moment from "moment";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { numberInputOnWheelPreventChange } from "@/utils/number";
-import SelectCategory from "./components/shared/SelectCategory";
 import { LoadingButton } from "@mui/lab";
 import { ISnackbar } from "@/utils/interface/snackbar";
-import { fetchCreateAsset } from "@/networks/libs/asset";
-import SelectLocation from "./components/shared/SelectLocation";
-import SnackbarAlert from "../../components/shared/SnackbarAlert";
-import { useRouter } from "next/navigation";
-import UploadFoto from "./components/shared/UploadFoto";
+import { fetchUpdateAsset, getAsset } from "@/networks/libs/asset";
+import SnackbarAlert from "../../../components/shared/SnackbarAlert";
+import { useParams, useRouter } from "next/navigation";
+import UploadFoto from "../../create/components/shared/UploadFoto";
+import SelectLocation from "../../create/components/shared/SelectLocation";
+import SelectCategory from "../../create/components/shared/SelectCategory";
+import dayjs from "dayjs";
 
 const CreateAsset = () => {
+  const firstRun = useRef(true);
+  const { id } = useParams();
   const router = useRouter();
+
   const [isLoading, setIsloading] = useState(false);
+  const [locationId, setLocationId] = useState(0);
+  const [categoryId, setCategoryId] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
   const [snackbar, setSnackbar] = useState<ISnackbar>({
     isOpen: false,
     message: "",
     severity: "info",
   });
+
+  const handleChangeLocationId = (value: any) => {
+    setLocationId(parseInt(value));
+  };
+
+  const handleChangeCategoryId = (value: any) => {
+    setCategoryId(parseInt(value));
+  };
+
+  const [isLoadingGet, setIsLoadingGet] = useState(false);
+  const [asset, setAsset] = useState<any>();
+  const fetchAsset = () => {
+    const token = localStorage.getItem("token") || "";
+    setIsLoadingGet(true);
+    getAsset(id.toString(), token)
+      .then((response) => {
+        setAsset(response?.data?.result);
+        setImageUrl(response?.data?.result?.image_url);
+        setLocationId(response?.data?.result?.location_id);
+        setCategoryId(response?.data?.result?.category_id);
+
+        setIsLoadingGet(false);
+      })
+      .catch((error) => {
+        setIsLoadingGet(false);
+      });
+  };
+
+  useEffect(() => {
+    if (firstRun.current) {
+      fetchAsset();
+      firstRun.current = false;
+    }
+  }, []);
 
   const onCreateAsset = async ({
     assetCode,
@@ -59,18 +99,22 @@ const CreateAsset = () => {
   }) => {
     setIsloading(true);
     const token = localStorage.getItem("token") || "";
-    await fetchCreateAsset(token, {
-      category_id: categoryId,
-      location_id: locationId,
-      asset_code: assetCode,
-      name,
-      price,
-      brand,
-      vendor,
-      purchase_date: purchaseDate,
-      routine_repair_time: routineRepairTime,
-      image_url: imageUrl,
-    })
+    await fetchUpdateAsset(
+      token,
+      {
+        category_id: categoryId,
+        location_id: locationId,
+        asset_code: assetCode,
+        name,
+        price,
+        brand,
+        vendor,
+        purchase_date: purchaseDate,
+        routine_repair_time: routineRepairTime,
+        image_url: imageUrl,
+      },
+      id.toString()
+    )
       .then((response) => {
         setIsloading(false);
         setSnackbar({
@@ -78,7 +122,7 @@ const CreateAsset = () => {
           message: "Berhasil menambah Aset!",
           severity: "success",
         });
-        router.push("/asset");
+        router.push(`/asset/${id.toString()}`);
       })
       .catch((error) => {
         const message = error?.response?.data?.message
@@ -97,17 +141,17 @@ const CreateAsset = () => {
     <Link key="1" href="/asset">
       List Aset
     </Link>,
+    <Link key="1" href={`/asset/${id.toString()}`}>
+      Detail Aset
+    </Link>,
     <Typography key="2" color="text.primary">
-      Tambah Aset Baru
+      Edit Aset
     </Typography>,
   ];
 
   return (
-    <PageContainer
-      title="Input Data Aset Baru"
-      description="Input Data Aset Baru"
-    >
-      <DashboardCard title="Input Data Aset Baru">
+    <PageContainer title="Edit Aset" description="Edit Aset">
+      <DashboardCard title="Edit Aset">
         <Stack direction="column" spacing={2}>
           <SnackbarAlert
             message={snackbar.message}
@@ -184,9 +228,9 @@ const CreateAsset = () => {
                           <TextField
                             fullWidth
                             placeholder="Kode Aset"
-                            label="Kode"
                             name="assetCode"
                             required
+                            defaultValue={asset?.asset_code}
                           />
                         </Stack>
 
@@ -195,22 +239,34 @@ const CreateAsset = () => {
                           <TextField
                             fullWidth
                             placeholder="Nama Aset"
-                            label="Nama"
                             name="name"
                             required
+                            defaultValue={asset?.name}
                           />
                         </Stack>
 
                         <Stack direction="column" spacing={1}>
                           <Typography fontWeight={700}>Lokasi Aset</Typography>
-                          <SelectLocation name="locationId" />
+                          <SelectLocation
+                            name="locationId"
+                            value={locationId}
+                            onChange={(event) =>
+                              handleChangeLocationId(event.target.value)
+                            }
+                          />
                         </Stack>
 
                         <Stack direction="column" spacing={1}>
                           <Typography fontWeight={700}>
                             Kategori Aset
                           </Typography>
-                          <SelectCategory name="categoryId" />
+                          <SelectCategory
+                            name="categoryId"
+                            value={categoryId}
+                            onChange={(event) =>
+                              handleChangeCategoryId(event.target.value)
+                            }
+                          />
                         </Stack>
 
                         <Stack direction="column" spacing={1}>
@@ -218,9 +274,9 @@ const CreateAsset = () => {
                           <TextField
                             fullWidth
                             placeholder="Merk"
-                            label="Merk"
                             name="brand"
                             required
+                            defaultValue={asset?.brand}
                           />
                         </Stack>
                       </Stack>
@@ -234,8 +290,8 @@ const CreateAsset = () => {
                           <TextField
                             fullWidth
                             placeholder="Vendor Pembelian"
-                            label="Vendor"
                             name="vendor"
+                            defaultValue={asset?.vendor}
                           />
                         </Stack>
 
@@ -255,6 +311,7 @@ const CreateAsset = () => {
                             }}
                             onWheel={numberInputOnWheelPreventChange}
                             name="price"
+                            defaultValue={asset?.price}
                           />
                         </Stack>
 
@@ -266,6 +323,7 @@ const CreateAsset = () => {
                             <DatePicker
                               name="purchaseDate"
                               format="YYYY-MM-DD"
+                              value={dayjs(new Date(asset?.purchase_date))}
                             />
                           </LocalizationProvider>
                         </Stack>
@@ -286,6 +344,7 @@ const CreateAsset = () => {
                             }}
                             onWheel={numberInputOnWheelPreventChange}
                             name="routineRepairTime"
+                            defaultValue={asset?.routine_repair_time}
                           />
                         </Stack>
                       </Stack>

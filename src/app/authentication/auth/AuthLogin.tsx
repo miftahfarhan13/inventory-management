@@ -11,6 +11,8 @@ import {
 import { fetchLogin } from "@/networks/libs/auth";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
+import SnackbarAlert from "@/app/(DashboardLayout)/components/shared/SnackbarAlert";
+import { ISnackbar } from "@/utils/interface/snackbar";
 
 interface loginType {
   title?: string;
@@ -20,9 +22,10 @@ interface loginType {
 
 function AuthLogin({ title, subtitle, subtext }: loginType) {
   const router = useRouter();
-  const [snackbar, setSnackbar] = useState({
+  const [snackbar, setSnackbar] = React.useState<ISnackbar>({
     isOpen: false,
     message: "",
+    severity: "info",
   });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,6 +50,7 @@ function AuthLogin({ title, subtitle, subtext }: loginType) {
         setSnackbar({
           isOpen: true,
           message: "Silahkan cek email dan password anda!",
+          severity: "error",
         });
       });
   };
@@ -60,11 +64,21 @@ function AuthLogin({ title, subtitle, subtext }: loginType) {
       ) : null}
 
       {subtext}
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={snackbar.isOpen}
+
+      <SnackbarAlert
         message={snackbar.message}
+        severity={snackbar.severity}
+        open={snackbar.isOpen}
+        onClose={() =>
+          setSnackbar((prev) => {
+            return {
+              ...prev,
+              isOpen: false,
+            };
+          })
+        }
       />
+
       <form
         onSubmit={(e) => {
           e.preventDefault();

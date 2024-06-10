@@ -28,6 +28,9 @@ import { getAssets } from "@/networks/libs/asset";
 import { IconEye } from "@tabler/icons-react";
 import Link from "next/link";
 import { IconPlus } from "@tabler/icons-react";
+import { formatter } from "@/utils/number";
+import moment from "moment";
+import { StyledIconButton } from "./create/components/shared/StyledIconButton";
 
 const Asset = () => {
   const firstRun = useRef(true);
@@ -64,9 +67,15 @@ const Asset = () => {
     500
   );
 
+  const getStatus = (assetImprovements: any) => {
+    return assetImprovements && assetImprovements?.length > 0
+      ? assetImprovements[0]?.type
+      : "Baik";
+  };
+
   return (
-    <PageContainer title="Aset" description="Aset">
-      <DashboardCard title="Aset">
+    <PageContainer title="Data Aset" description="Aset">
+      <DashboardCard title=" Data Aset">
         <Stack direction="column" spacing={2}>
           <Box sx={{ overflow: "auto", width: { xs: "280px", sm: "auto" } }}>
             <Stack
@@ -156,142 +165,160 @@ const Asset = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {asset?.data?.map((asset: any, index: number) => (
-                      <TableRow key={asset?.id}>
-                        <TableCell>
-                          <Typography
-                            sx={{
-                              fontSize: "15px",
-                              fontWeight: "500",
-                            }}
-                          >
-                            {index + 1}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography variant="subtitle2" fontWeight={600}>
-                              #{asset?.asset_code}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography variant="subtitle2" fontWeight={600}>
-                              {asset?.name}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography variant="subtitle2" fontWeight={600}>
-                              {asset?.location?.name}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography variant="subtitle2" fontWeight={600}>
-                              {asset?.location?.study_program?.name}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                            sx={{
-                              px: "4px",
-                              backgroundColor: "success.main",
-                              color: "#fff",
-                            }}
-                            size="small"
-                            label="Baik"
-                          ></Chip>
-                          {/* <Chip
-                            sx={{
-                              px: "4px",
-                              backgroundColor: "error.main",
-                              color: "#fff",
-                            }}
-                            size="small"
-                            label="Perbaikan Mandiri"
-                          ></Chip>
-                          <Chip
-                            sx={{
-                              px: "4px",
-                              backgroundColor: "error.main",
-                              color: "#fff",
-                            }}
-                            size="small"
-                            label="Perbaikan Vendor"
-                          ></Chip> */}
-                        </TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography variant="subtitle2" fontWeight={600}>
-                              {asset?.location?.study_program?.name}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography variant="subtitle2" fontWeight={600}>
-                              28/04/2024
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Typography
-                            color="textSecondary"
-                            variant="subtitle2"
-                            fontWeight={400}
-                          >
-                            {asset?.user?.name}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="right">
-                          <Stack
-                            spacing={1}
-                            direction="row"
-                            justifyContent="end"
-                          >
-                            <IconButton
-                              href={`/asset/${asset?.id}`}
-                              component={Link}
-                              aria-label="menu"
+                    {asset?.data?.map((asset: any, index: number) => {
+                      const assetImprovements =
+                        asset?.asset_improvements &&
+                        asset?.asset_improvements?.length > 0
+                          ? asset?.asset_improvements?.sort(
+                              (a: any, b: any) => a?.created_at - b?.created_at
+                            )
+                          : [];
+
+                      const status = getStatus(assetImprovements);
+
+                      const totalLogPrice = assetImprovements?.reduce(
+                        (total: number, currentItem: any) => {
+                          return total + currentItem.improvement_price;
+                        },
+                        0
+                      );
+
+                      const lastRepair = assetImprovements[0]?.created_at;
+                      return (
+                        <TableRow key={asset?.id}>
+                          <TableCell>
+                            <Typography
+                              sx={{
+                                fontSize: "15px",
+                                fontWeight: "500",
+                              }}
                             >
-                              <IconEye width="20" height="20" />
-                            </IconButton>
-                            {/* <ModalUpdateAsset
+                              {index + 1}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                #{asset?.asset_code}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                {asset?.name}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                {asset?.location?.name}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                {asset?.location?.study_program?.name}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              sx={{
+                                px: "4px",
+                                backgroundColor:
+                                  status === "Baik"
+                                    ? "success.main"
+                                    : "error.main",
+                                color: "#fff",
+                              }}
+                              size="small"
+                              label={status}
+                            ></Chip>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                Rp {formatter.format(totalLogPrice)}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                {lastRepair
+                                  ? moment(new Date(lastRepair)).format(
+                                      "DD/MM/YYYY"
+                                    )
+                                  : "-"}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              color="textSecondary"
+                              variant="subtitle2"
+                              fontWeight={400}
+                            >
+                              {asset?.user?.name}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Stack
+                              spacing={1}
+                              direction="row"
+                              justifyContent="end"
+                            >
+                              <Link href={`/asset/${asset?.id}`}>
+                                <StyledIconButton
+                                  variant="outlined"
+                                  size="small"
+                                >
+                                  <IconEye width="20" height="20" />
+                                </StyledIconButton>
+                              </Link>
+
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                href={`/asset-log/create/${asset?.id}`}
+                                LinkComponent={Link}
+                              >
+                                Log Perbaikan
+                              </Button>
+                              {/* <ModalUpdateAsset
                           data={Asset}
                           onSuccess={() => fetchAsset("1", show)}
                         />
@@ -299,10 +326,11 @@ const Asset = () => {
                           id={asset?.id}
                           onSuccess={() => fetchAsset("1", show)}
                         /> */}
-                          </Stack>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                            </Stack>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </TableContainer>

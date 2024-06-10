@@ -37,7 +37,7 @@ export function fetchCreateAsset(token: string, data: any) {
   return axiosClient.post(`/assets/create`, data, config);
 }
 
-export function fetchUpdateAsset(token: string, data: any, id: number) {
+export function fetchUpdateAsset(token: string, data: any, id: string) {
   let config = {
     headers: {
       Authorization: `Bearer ${token}`,

@@ -58,12 +58,12 @@ const DetailAsset = () => {
   const currentValue = price - assetAge * totalDepreciation;
 
   const assetImprovements = asset?.asset_improvements
-    ? asset?.asset_improvements
+    ? asset?.asset_improvements.sort(
+        (a: any, b: any) => a?.created_at - b?.created_at
+      )
     : [];
 
-  const lastRepair = asset?.asset_improvements
-    ? asset?.asset_improvements[0]?.created_at
-    : "";
+  const lastRepair = assetImprovements ? assetImprovements[0]?.created_at : "";
 
   const nextRepair = moment(new Date(lastRepair))
     .add(1, "M")
@@ -75,6 +75,11 @@ const DetailAsset = () => {
     },
     0
   );
+
+  const status =
+    assetImprovements && assetImprovements?.length > 0
+      ? assetImprovements[0]?.type
+      : "Baik";
 
   const breadcrumbs = [
     <Link key="1" href="/asset">
@@ -102,7 +107,12 @@ const DetailAsset = () => {
                 Cetak
               </Button>
 
-              <Button variant="contained" startIcon={<IconEdit size="16" />}>
+              <Button
+                variant="contained"
+                startIcon={<IconEdit size="16" />}
+                href={`/asset/${id}/update`}
+                LinkComponent={Link}
+              >
                 Edit
               </Button>
             </Stack>
@@ -198,9 +208,7 @@ const DetailAsset = () => {
                         Total Perbaikan
                       </TableCell>
                       <TableCell align="right">
-                        {asset?.asset_improvements
-                          ? asset?.asset_improvements?.length
-                          : 0}
+                        {assetImprovements ? assetImprovements?.length : 0}
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -229,7 +237,9 @@ const DetailAsset = () => {
                       <TableCell component="th" scope="row">
                         Waktu Perbaikan Rutin
                       </TableCell>
-                      <TableCell align="right">-</TableCell>
+                      <TableCell align="right">
+                        {asset?.routine_repair_time} Hari
+                      </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">
@@ -257,36 +267,24 @@ const DetailAsset = () => {
                         <Chip
                           sx={{
                             px: "4px",
-                            backgroundColor: "success.main",
+                            backgroundColor:
+                              status === "Baik" ? "success.main" : "error.main",
                             color: "#fff",
                           }}
                           size="small"
-                          label="Baik"
+                          label={status}
                         ></Chip>
-                        {/* <Chip
-                            sx={{
-                              px: "4px",
-                              backgroundColor: "error.main",
-                              color: "#fff",
-                            }}
-                            size="small"
-                            label="Perbaikan Mandiri"
-                          ></Chip>
-                          <Chip
-                            sx={{
-                              px: "4px",
-                              backgroundColor: "error.main",
-                              color: "#fff",
-                            }}
-                            size="small"
-                            label="Perbaikan Vendor"
-                          ></Chip> */}
                       </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
 
-                <Button variant="outlined">Log Perbaikan</Button>
+                <Button
+                  variant="outlined"
+                  href={`/asset-log/create/${asset?.id}`}
+                >
+                  Log Perbaikan
+                </Button>
               </Stack>
 
               <Stack direction="column" alignItems="center" flexGrow={1}>
