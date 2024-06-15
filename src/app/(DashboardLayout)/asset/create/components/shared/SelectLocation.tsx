@@ -38,6 +38,7 @@ export default function SelectLocation({ ...rest }: SelectProps) {
           label="Lokasi"
           {...rest}
         >
+          <MenuItem>Pilih Lokasi</MenuItem>
           {locations?.map((location: any) => (
             <MenuItem value={location?.id}>
               {location?.name} - {location?.study_program?.name}

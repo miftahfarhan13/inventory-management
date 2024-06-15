@@ -5,15 +5,19 @@ export function getAssets(
   token: string,
   page: string,
   show: string,
-  search: string
+  search: string,
+  body: any
 ) {
   let config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
+
+  const queryString = new URLSearchParams(body).toString();
+
   return axiosClient.get(
-    `/assets?is_paginate=${isPaginate}&page=${page}&per_page=${show}&search=${search}`,
+    `/assets?is_paginate=${isPaginate}&page=${page}&per_page=${show}&search=${search}&${queryString}`,
     config
   );
 }

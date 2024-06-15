@@ -38,6 +38,7 @@ export default function SelectStudyProgram({ ...rest }: SelectProps) {
           label="Program Studi"
           {...rest}
         >
+          <MenuItem>Pilih Program Studi</MenuItem>
           {studyPrograms?.map((program: any) => (
             <MenuItem value={program?.id}>{program?.name}</MenuItem>
           ))}

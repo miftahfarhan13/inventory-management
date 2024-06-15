@@ -25,23 +25,29 @@ import DashboardCard from "@/app/(DashboardLayout)/components/shared/DashboardCa
 import { useEffect, useRef, useState } from "react";
 import useDebounce from "@/utils/hooks/useDebounce";
 import { getAssets } from "@/networks/libs/asset";
-import { IconEye } from "@tabler/icons-react";
+import { IconDownload, IconEye } from "@tabler/icons-react";
 import Link from "next/link";
 import { IconPlus } from "@tabler/icons-react";
 import { formatter } from "@/utils/number";
 import moment from "moment";
 import { StyledIconButton } from "./create/components/shared/StyledIconButton";
+import DetailAssetType from "./components/DetailAssetType";
+import { StyledTableCell } from "../asset-log/[id]/page";
+import FilterAsset from "./components/FilterAsset";
+import { useReactToPrint } from "react-to-print";
 
 const Asset = () => {
+  const componentPdf = useRef();
   const firstRun = useRef(true);
+  const [filtersData, setFiltersData] = useState<any>();
   const [show, setShow] = useState("10");
   const [keyword, setKeyword] = useState("");
   const [asset, setAsset] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
-  const fetchAsset = (page: string, show: string) => {
+  const fetchAsset = (page: string, show: string, filters: any) => {
     const token = localStorage.getItem("token") || "";
     setIsLoading(true);
-    getAssets("true", token, page, show, keyword)
+    getAssets("true", token, page, show, keyword, filters)
       .then((response) => {
         setAsset(response?.data?.result);
         setIsLoading(false);
@@ -53,7 +59,7 @@ const Asset = () => {
 
   useEffect(() => {
     if (firstRun.current) {
-      fetchAsset("1", show);
+      fetchAsset("1", show, filtersData);
       firstRun.current = false;
     }
   }, []);
@@ -61,7 +67,7 @@ const Asset = () => {
   // DeBounce Function
   useDebounce(
     () => {
-      fetchAsset("1", show);
+      fetchAsset("1", show, filtersData);
     },
     [keyword],
     500
@@ -73,8 +79,26 @@ const Asset = () => {
       : "Baik";
   };
 
+  const onSaveFilter = (value: any) => {
+    setFiltersData(value);
+    fetchAsset("1", show, value);
+  };
+
+  const generatePDF = useReactToPrint({
+    // @ts-ignore
+    content: () => componentPdf.current,
+    documentTitle: "Asset Data",
+  });
+
   return (
     <PageContainer title="Data Aset" description="Aset">
+      <style type="text/css" media="print">
+        {
+          "\
+        @page { size: landscape; }\
+      "
+        }
+      </style>
       <DashboardCard title=" Data Aset">
         <Stack direction="column" spacing={2}>
           <Box sx={{ overflow: "auto", width: { xs: "280px", sm: "auto" } }}>
@@ -84,13 +108,23 @@ const Asset = () => {
               justifyContent="space-between"
               pt="5px"
             >
-              <TextField
-                size="small"
-                label="Search"
-                placeholder="Search nama aset"
-                value={keyword}
-                onChange={(event) => setKeyword(event.target.value)}
-              />
+              <Stack direction="row" spacing={2} alignItems="center">
+                <TextField
+                  size="small"
+                  label="Search"
+                  placeholder="Search nama aset"
+                  value={keyword}
+                  onChange={(event) => setKeyword(event.target.value)}
+                />
+                <FilterAsset onSaveFilter={(value) => onSaveFilter(value)} />
+                <Button
+                  variant="outlined"
+                  startIcon={<IconDownload size={16} />}
+                  onClick={generatePDF}
+                >
+                  Cetak
+                </Button>
+              </Stack>
               <Button
                 href="/asset/create"
                 variant="contained"
@@ -101,7 +135,8 @@ const Asset = () => {
               </Button>
             </Stack>
             <Paper sx={{ width: "100%", overflow: "hidden" }}>
-              <TableContainer>
+              <TableContainer style={{ maxWidth: "calc(100vw - 420px)" }}>
+                {/* @ts-ignore */}
                 <Table
                   stickyHeader
                   aria-label="sticky table"
@@ -109,6 +144,7 @@ const Asset = () => {
                     whiteSpace: "nowrap",
                     mt: 2,
                   }}
+                  ref={componentPdf}
                 >
                   <TableHead>
                     <TableRow>
@@ -157,11 +193,11 @@ const Asset = () => {
                           Dibuat Oleh
                         </Typography>
                       </TableCell>
-                      <TableCell align="right">
+                      <StyledTableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
                           Action
                         </Typography>
-                      </TableCell>
+                      </StyledTableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -169,9 +205,7 @@ const Asset = () => {
                       const assetImprovements =
                         asset?.asset_improvements &&
                         asset?.asset_improvements?.length > 0
-                          ? asset?.asset_improvements?.sort(
-                              (a: any, b: any) => a?.created_at - b?.created_at
-                            )
+                          ? asset?.asset_improvements
                           : [];
 
                       const status = getStatus(assetImprovements);
@@ -183,7 +217,8 @@ const Asset = () => {
                         0
                       );
 
-                      const lastRepair = assetImprovements[0]?.created_at;
+                      const lastRepair =
+                        assetImprovements[0]?.actual_repair_end_date;
                       return (
                         <TableRow key={asset?.id}>
                           <TableCell>
@@ -245,18 +280,33 @@ const Asset = () => {
                             </Box>
                           </TableCell>
                           <TableCell>
-                            <Chip
-                              sx={{
-                                px: "4px",
-                                backgroundColor:
-                                  status === "Baik"
-                                    ? "success.main"
-                                    : "error.main",
-                                color: "#fff",
-                              }}
-                              size="small"
-                              label={status}
-                            ></Chip>
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={0.2}
+                            >
+                              <Chip
+                                sx={{
+                                  px: "4px",
+                                  backgroundColor:
+                                    status === "Baik"
+                                      ? "success.main"
+                                      : "error.main",
+                                  color: "#fff",
+                                }}
+                                size="small"
+                                label={status}
+                              ></Chip>
+
+                              {asset?.asset_improvements &&
+                                asset?.asset_improvements?.length > 0 && (
+                                  <DetailAssetType
+                                    assetImprovements={
+                                      asset?.asset_improvements
+                                    }
+                                  />
+                                )}
+                            </Stack>
                           </TableCell>
                           <TableCell>
                             <Box
@@ -271,20 +321,38 @@ const Asset = () => {
                             </Box>
                           </TableCell>
                           <TableCell>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                              }}
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={0.2}
                             >
-                              <Typography variant="subtitle2" fontWeight={600}>
-                                {lastRepair
-                                  ? moment(new Date(lastRepair)).format(
-                                      "DD/MM/YYYY"
-                                    )
-                                  : "-"}
-                              </Typography>
-                            </Box>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <Typography
+                                  variant="subtitle2"
+                                  fontWeight={600}
+                                >
+                                  {lastRepair
+                                    ? moment(new Date(lastRepair)).format(
+                                        "DD/MM/YYYY"
+                                      )
+                                    : "-"}
+                                </Typography>
+                              </Box>
+
+                              {asset?.asset_improvements &&
+                                asset?.asset_improvements?.length > 0 && (
+                                  <DetailAssetType
+                                    assetImprovements={
+                                      asset?.asset_improvements
+                                    }
+                                  />
+                                )}
+                            </Stack>
                           </TableCell>
                           <TableCell>
                             <Typography
@@ -295,7 +363,7 @@ const Asset = () => {
                               {asset?.user?.name}
                             </Typography>
                           </TableCell>
-                          <TableCell align="right">
+                          <StyledTableCell>
                             <Stack
                               spacing={1}
                               direction="row"
@@ -313,7 +381,7 @@ const Asset = () => {
                               <Button
                                 size="small"
                                 variant="outlined"
-                                href={`/asset-log/create/${asset?.id}`}
+                                href={`/asset-log/${asset?.id}?code=${asset?.asset_code}`}
                                 LinkComponent={Link}
                               >
                                 Log Perbaikan
@@ -327,7 +395,7 @@ const Asset = () => {
                           onSuccess={() => fetchAsset("1", show)}
                         /> */}
                             </Stack>
-                          </TableCell>
+                          </StyledTableCell>
                         </TableRow>
                       );
                     })}
@@ -347,7 +415,7 @@ const Asset = () => {
                 onChange={(event) => {
                   const value = event?.target?.value;
                   setShow(event?.target?.value);
-                  fetchAsset("1", value);
+                  fetchAsset("1", value, filtersData);
                 }}
               >
                 <MenuItem value="5">5</MenuItem>
@@ -357,7 +425,9 @@ const Asset = () => {
             </FormControl>
 
             <Pagination
-              onChange={(_, page) => fetchAsset(page.toString(), show)}
+              onChange={(_, page) =>
+                fetchAsset(page.toString(), show, filtersData)
+              }
               count={asset?.last_page}
             />
           </Box>

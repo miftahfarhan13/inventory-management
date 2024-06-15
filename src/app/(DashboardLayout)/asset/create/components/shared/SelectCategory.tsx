@@ -38,6 +38,7 @@ export default function SelectCategory({ ...rest }: SelectProps) {
           label="Kategori"
           {...rest}
         >
+          <MenuItem>Pilih Kategori</MenuItem>
           {categories?.map((category: any) => (
             <MenuItem value={category?.id}>{category?.name}</MenuItem>
           ))}

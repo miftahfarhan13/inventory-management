@@ -22,9 +22,11 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import moment from "moment";
 import { formatter } from "@/utils/number";
+import { useReactToPrint } from "react-to-print";
 
 const DetailAsset = () => {
   const { id } = useParams();
+  const componentPdf = useRef(null);
   const firstRun = useRef(true);
   const [asset, setAsset] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
@@ -90,6 +92,12 @@ const DetailAsset = () => {
     </Typography>,
   ];
 
+  const generatePDF = useReactToPrint({
+    // @ts-ignore
+    content: () => componentPdf.current,
+    documentTitle: `Asset Data ${asset?.asset_code}`,
+  });
+
   return (
     <PageContainer title="Detail Aset" description="Detail Aset">
       <DashboardCard title="Detail Aset">
@@ -103,7 +111,11 @@ const DetailAsset = () => {
 
           <Stack direction="column" spacing={3}>
             <Stack direction="row" spacing={2} alignSelf="end">
-              <Button variant="outlined" startIcon={<IconDownload size="16" />}>
+              <Button
+                variant="outlined"
+                startIcon={<IconDownload size="16" />}
+                onClick={generatePDF}
+              >
                 Cetak
               </Button>
 
@@ -117,7 +129,11 @@ const DetailAsset = () => {
               </Button>
             </Stack>
 
-            <Stack direction={{ xs: "column-reverse", md: "row" }} spacing={4}>
+            <Stack
+              direction={{ xs: "column-reverse", md: "row" }}
+              spacing={4}
+              ref={componentPdf}
+            >
               <Stack direction="column" spacing={2} flexGrow={1}>
                 <Table aria-label="simple table" size="small">
                   <TableHead style={{ backgroundColor: "#5D87FF" }}>
@@ -281,7 +297,7 @@ const DetailAsset = () => {
 
                 <Button
                   variant="outlined"
-                  href={`/asset-log/create/${asset?.id}`}
+                  href={`/asset-log/${asset?.id}?code=${asset?.asset_code}`}
                 >
                   Log Perbaikan
                 </Button>
@@ -298,10 +314,6 @@ const DetailAsset = () => {
                 </Box>
               </Stack>
             </Stack>
-            <Grid container spacing={3}>
-              <Grid item xs={12} lg={6} style={{ padding: 0 }}></Grid>
-              <Grid item xs={12} lg={6} style={{ padding: 0 }}></Grid>
-            </Grid>
           </Stack>
         </Stack>
       </DashboardCard>
