@@ -1,5 +1,27 @@
 import axiosClient from "../apiClient";
 
+export function getAssetImprovements(
+  isPaginate: string,
+  token: string,
+  page: string,
+  show: string,
+  search: string,
+  body: any
+) {
+  let config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const queryString = new URLSearchParams(body).toString();
+
+  return axiosClient.get(
+    `/asset-improvements?is_paginate=${isPaginate}&page=${page}&per_page=${show}&search=${search}&${queryString}`,
+    config
+  );
+}
+
 export function getAssetImprovementsByAssetId(
   isPaginate: string,
   token: string,

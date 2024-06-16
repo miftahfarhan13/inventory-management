@@ -49,6 +49,8 @@ export default function FilterAssetLog({
   const [checkedAll, setCheckedAll] = React.useState(false);
   const [checkedSuccess, setcheckedSuccess] = React.useState(false);
   const [checkedFailed, setcheckedFailed] = React.useState(false);
+  const [checkedWaiting, setcheckedWaiting] = React.useState(false);
+
   const [checkedTw1, setCheckedTw1] = React.useState(false);
   const [checkedTw2, setCheckedTw2] = React.useState(false);
   const [checkedTw3, setCheckedTw3] = React.useState(false);
@@ -101,10 +103,12 @@ export default function FilterAssetLog({
       setCheckedAll(event.target.checked);
       setcheckedSuccess(true);
       setcheckedFailed(true);
+      setcheckedWaiting(true);
     } else {
       setCheckedAll(event.target.checked);
       setcheckedSuccess(false);
       setcheckedFailed(false);
+      setcheckedWaiting(false);
     }
   };
 
@@ -112,8 +116,12 @@ export default function FilterAssetLog({
     const dateRange = range ? range : [];
     let status = Array<any>();
     if (checkedAll) {
-      status = ["Sukses", "Gagal"];
+      status = ["Menunggu Persetujuan", "Sukses", "Gagal"];
     } else {
+      if (checkedWaiting) {
+        status.push("Menunggu Persetujuan");
+      }
+
       if (checkedSuccess) {
         status.push("Sukses");
       }
@@ -253,6 +261,21 @@ export default function FilterAssetLog({
                     </Stack>
 
                     <Stack direction="column" spacing={2}>
+                      <Stack direction="row" alignItems="center" spacing={0.5}>
+                        <Checkbox
+                          checked={checkedWaiting}
+                          onChange={(event) =>
+                            setcheckedWaiting(event.target.checked)
+                          }
+                          aria-label="Checkbox Menunggu Persetujuan"
+                          size="small"
+                          style={{ padding: 0 }}
+                        />
+                        <Typography fontWeight="400">
+                          Menunggu Persetujuan
+                        </Typography>
+                      </Stack>
+
                       <Stack direction="row" alignItems="center" spacing={0.5}>
                         <Checkbox
                           checked={checkedSuccess}

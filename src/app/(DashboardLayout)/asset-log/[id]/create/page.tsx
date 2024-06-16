@@ -87,7 +87,7 @@ const CreateAssetLog = () => {
     const token = localStorage.getItem("token") || "";
     await fetchCreateAssetImprovement(token, {
       asset_id: parseInt(id.toString()),
-      status: "",
+      status: "Menunggu Persetujuan",
       description,
       reporter,
       contact_reporter,
