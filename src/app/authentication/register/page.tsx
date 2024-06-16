@@ -2,7 +2,6 @@
 import { Grid, Box, Card, Typography, Stack } from "@mui/material";
 import Link from "next/link";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
-import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import AuthRegister from "../auth/AuthRegister";
 
 const Register2 = () => (
@@ -43,7 +42,14 @@ const Register2 = () => (
             sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "500px" }}
           >
             <Box display="flex" alignItems="center" justifyContent="center">
-              <Logo />
+              <Typography
+                fontWeight="700"
+                fontSize="28px"
+                mb="20px"
+                textAlign="center"
+              >
+                🗂️ Manpes
+              </Typography>
             </Box>
             <AuthRegister
               subtext={

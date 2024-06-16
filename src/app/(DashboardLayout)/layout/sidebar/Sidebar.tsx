@@ -1,5 +1,4 @@
-import { useMediaQuery, Box, Drawer } from "@mui/material";
-import Logo from "../shared/logo/Logo";
+import { useMediaQuery, Box, Drawer, Typography } from "@mui/material";
 import SidebarItems from "./SidebarItems";
 import { Upgrade } from "./Updrade";
 
@@ -24,7 +23,7 @@ const Sidebar = ({
         sx={{
           width: sidebarWidth,
           flexShrink: 0,
-          zIndex: 2
+          zIndex: 2,
         }}
       >
         {/* ------------------------------------------- */}
@@ -53,7 +52,14 @@ const Sidebar = ({
             {/* Logo */}
             {/* ------------------------------------------- */}
             <Box px={3}>
-              <Logo />
+              <Typography
+                fontWeight="700"
+                fontSize="28px"
+                mt="24px"
+                textAlign="center"
+              >
+                🗂️ Manpes
+              </Typography>
             </Box>
             <Box>
               {/* ------------------------------------------- */}
@@ -84,7 +90,14 @@ const Sidebar = ({
       {/* Logo */}
       {/* ------------------------------------------- */}
       <Box px={2}>
-        <Logo />
+        <Typography
+          fontWeight="700"
+          fontSize="28px"
+          mt="24px"
+          textAlign="center"
+        >
+          🗂️ Manpes
+        </Typography>
       </Box>
       {/* ------------------------------------------- */}
       {/* Sidebar For Mobile */}

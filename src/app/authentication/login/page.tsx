@@ -2,7 +2,6 @@
 import { Grid, Box, Card, Stack, Typography } from "@mui/material";
 // components
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
-import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import AuthLogin from "../auth/AuthLogin";
 import useIsAuth from "@/utils/hooks/isAuth";
 
@@ -46,7 +45,14 @@ const Login2 = () => {
               sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "500px" }}
             >
               <Box display="flex" alignItems="center" justifyContent="center">
-                <Logo />
+                <Typography
+                  fontWeight="700"
+                  fontSize="28px"
+                  mb="20px"
+                  textAlign="center"
+                >
+                  🗂️ Manpes
+                </Typography>
               </Box>
               <AuthLogin
                 subtext={

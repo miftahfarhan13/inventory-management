@@ -552,8 +552,7 @@ const AssetLogByAssetId = () => {
                           <StyledTableCell>
                             {user?.role === "admin" ? (
                               <>
-                                {asset?.approved_by ||
-                                asset?.approved_by !== 0 ? (
+                                {asset?.approved_user?.name ? (
                                   <>
                                     <Typography
                                       color="textSecondary"

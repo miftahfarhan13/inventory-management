@@ -1,5 +1,5 @@
 "use client";
-import { Grid, Box } from "@mui/material";
+import { Grid, Box, Stack } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 // components
 import SalesOverview from "@/app/(DashboardLayout)/components/dashboard/SalesOverview";
@@ -10,6 +10,10 @@ import Blog from "@/app/(DashboardLayout)/components/dashboard/Blog";
 import MonthlyEarnings from "@/app/(DashboardLayout)/components/dashboard/MonthlyEarnings";
 import useIsAuth from "@/utils/hooks/isAuth";
 import TotalAssetLab from "./components/dashboard/TotalAssetLab";
+import TotalAsset from "./components/dashboard/TotalAsset";
+import AverageSuccessLog from "./components/dashboard/AverageSuccessLog";
+import TotalImprovementPrice from "./components/dashboard/TotalImprovementPrice";
+import PercentageStatusLog from "./components/dashboard/PercentageStatusLog";
 
 const Dashboard = () => {
   useIsAuth();
@@ -18,23 +22,14 @@ const Dashboard = () => {
       <Box>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>
-            <SalesOverview />
+            <TotalAsset />
           </Grid>
           <Grid item xs={12} lg={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <YearlyBreakup />
-              </Grid>
-              <Grid item xs={12}>
-                <MonthlyEarnings />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} lg={4}>
-            <RecentTransactions />
-          </Grid>
-          <Grid item xs={12} lg={8}>
-            <ProductPerformance />
+            <Stack direction="column" spacing={4}>
+              <AverageSuccessLog />
+              <TotalImprovementPrice />
+              <PercentageStatusLog />
+            </Stack>
           </Grid>
         </Grid>
       </Box>
