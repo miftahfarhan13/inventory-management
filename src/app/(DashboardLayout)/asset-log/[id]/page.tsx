@@ -35,6 +35,7 @@ import ModalApprove from "./components/ModalApprove";
 import { styled } from "@mui/system";
 import { useReactToPrint } from "react-to-print";
 import useGetMe from "@/utils/hooks/useGetMe";
+import FilterAssetLog from "./components/FilterAssetLog";
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   position: "sticky",
@@ -58,11 +59,13 @@ const AssetLogByAssetId = () => {
 
   const { user } = useGetMe();
   const firstRun = useRef(true);
+
+  const [filtersData, setFiltersData] = useState<any>();
   const [show, setShow] = useState("10");
   const [keyword, setKeyword] = useState("");
   const [asset, setAsset] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
-  const fetchAsset = (page: string, show: string) => {
+  const fetchAsset = (page: string, show: string, filters: any) => {
     const token = localStorage.getItem("token") || "";
     setIsLoading(true);
     getAssetImprovementsByAssetId(
@@ -71,7 +74,8 @@ const AssetLogByAssetId = () => {
       page,
       show,
       keyword,
-      id.toString()
+      id.toString(),
+      filters
     )
       .then((response) => {
         setAsset(response?.data?.result);
@@ -84,7 +88,7 @@ const AssetLogByAssetId = () => {
 
   useEffect(() => {
     if (firstRun.current) {
-      fetchAsset("1", show);
+      fetchAsset("1", show, filtersData);
       firstRun.current = false;
     }
   }, []);
@@ -92,11 +96,16 @@ const AssetLogByAssetId = () => {
   // DeBounce Function
   useDebounce(
     () => {
-      fetchAsset("1", show);
+      fetchAsset("1", show, filtersData);
     },
     [keyword],
     500
   );
+
+  const onSaveFilter = (value: any) => {
+    setFiltersData(value);
+    fetchAsset("1", show, value);
+  };
 
   const breadcrumbs = [
     <Link key="1" href="/asset">
@@ -149,6 +158,7 @@ const AssetLogByAssetId = () => {
                   value={keyword}
                   onChange={(event) => setKeyword(event.target.value)}
                 />
+                <FilterAssetLog onSaveFilter={(value) => onSaveFilter(value)} />
                 <Button
                   variant="outlined"
                   startIcon={<IconDownload size={16} />}
@@ -590,7 +600,7 @@ const AssetLogByAssetId = () => {
                 onChange={(event) => {
                   const value = event?.target?.value;
                   setShow(event?.target?.value);
-                  fetchAsset("1", value);
+                  fetchAsset("1", value, filtersData);
                 }}
               >
                 <MenuItem value="5">5</MenuItem>
@@ -600,7 +610,9 @@ const AssetLogByAssetId = () => {
             </FormControl>
 
             <Pagination
-              onChange={(_, page) => fetchAsset(page.toString(), show)}
+              onChange={(_, page) =>
+                fetchAsset(page.toString(), show, filtersData)
+              }
               count={asset?.last_page}
             />
           </Box>

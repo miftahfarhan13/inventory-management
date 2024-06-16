@@ -6,15 +6,19 @@ export function getAssetImprovementsByAssetId(
   page: string,
   show: string,
   search: string,
-  id: string
+  id: string,
+  body: any
 ) {
   let config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
+
+  const queryString = new URLSearchParams(body).toString();
+
   return axiosClient.get(
-    `/asset-improvements/asset/${id}?is_paginate=${isPaginate}&page=${page}&per_page=${show}&search=${search}`,
+    `/asset-improvements/asset/${id}?is_paginate=${isPaginate}&page=${page}&per_page=${show}&search=${search}&${queryString}`,
     config
   );
 }
