@@ -61,7 +61,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Tahun Quartal",
+    title: "Tahun",
     icon: IconCalendarStats,
     href: "/year-quarter",
   },
