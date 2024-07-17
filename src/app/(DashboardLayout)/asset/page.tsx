@@ -175,7 +175,7 @@ const Asset = () => {
                       </TableCell>
                       <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Status Sekarang
+                          Status Aset
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -195,7 +195,7 @@ const Asset = () => {
                       </TableCell>
                       <StyledTableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Action
+                          Aksi
                         </Typography>
                       </StyledTableCell>
                     </TableRow>
@@ -377,6 +377,15 @@ const Asset = () => {
                                   <IconEye width="20" height="20" />
                                 </StyledIconButton>
                               </Link>
+
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                href={`/asset/${asset?.id}/update`}
+                                LinkComponent={Link}
+                              >
+                                Edit
+                              </Button>
 
                               <Button
                                 size="small"

@@ -228,7 +228,7 @@ const AssetLogByAssetId = () => {
                       </TableCell>
                       <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Kontak Teknisi
+                          Nama Teknisi
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -238,7 +238,7 @@ const AssetLogByAssetId = () => {
                       </TableCell>
                       <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Status Perbaikan
+                          Status Persetujuan
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -474,7 +474,7 @@ const AssetLogByAssetId = () => {
                               sx={{
                                 px: "4px",
                                 backgroundColor:
-                                  asset?.status === "Sukses"
+                                  asset?.status === "Setuju"
                                     ? "success.main"
                                     : "error.main",
                                 color: "#fff",

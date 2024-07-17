@@ -31,7 +31,7 @@ export default function ModalApprove({ id }: { id: number }) {
         setIsLoading(false);
         setSnackbar({
           isOpen: true,
-          message: "Berhasil mengubah status Perbaikan Aset!",
+          message: "Berhasil mengubah Status Persetujuan Aset!",
           severity: "success",
         });
         router.refresh();
@@ -90,8 +90,8 @@ export default function ModalApprove({ id }: { id: number }) {
           size="small"
           onChange={(event) => handleChangeApprove(event.target.value)}
         >
-          <MenuItem value="Sukses">Sukses</MenuItem>
-          <MenuItem value="Gagal">Gagal</MenuItem>
+          <MenuItem value="Setuju">Setuju</MenuItem>
+          <MenuItem value="Tolak">Tolak</MenuItem>
         </Select>
       </FormControl>
     </>

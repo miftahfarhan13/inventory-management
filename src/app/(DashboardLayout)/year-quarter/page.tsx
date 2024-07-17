@@ -61,8 +61,8 @@ const YearQuarter = () => {
   );
 
   return (
-    <PageContainer title="Tahun Kuartal" description="Tahun Kuartal">
-      <DashboardCard title="Tahun Kuartal">
+    <PageContainer title="Tahun" description="Tahun">
+      <DashboardCard title="Tahun">
         <Stack direction="column" spacing={2}>
           <Box sx={{ overflow: "auto", width: { xs: "280px", sm: "auto" } }}>
             <Stack
@@ -123,7 +123,7 @@ const YearQuarter = () => {
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="subtitle2" fontWeight={600}>
-                      Action
+                      Aksi
                     </Typography>
                   </TableCell>
                 </TableRow>

@@ -309,13 +309,13 @@ const CreateAssetLog = () => {
                             name="type"
                             required
                           >
+                            <MenuItem value="Baik">Baik</MenuItem>
                             <MenuItem value="Perbaikan Mandiri">
                               Perbaikan Mandiri
                             </MenuItem>
                             <MenuItem value="Perbaikan Vendor">
                               Perbaikan Vendor
                             </MenuItem>
-                            <MenuItem value="Peremajaan">Peremajaan</MenuItem>
                           </Select>
                         </FormControl>
                       </Stack>
@@ -333,11 +333,11 @@ const CreateAssetLog = () => {
                       </Stack>
 
                       <Stack direction="column" spacing={1}>
-                        <Typography fontWeight={700}>Kontak Teknisi</Typography>
+                        <Typography fontWeight={700}>Nama Teknisi</Typography>
                         <TextField
                           fullWidth
-                          placeholder="Kontak Teknisi"
-                          label="Kontak Teknisi"
+                          placeholder="Nama Teknisi"
+                          label="Nama Teknisi"
                           name="contact_technician"
                           required
                         />

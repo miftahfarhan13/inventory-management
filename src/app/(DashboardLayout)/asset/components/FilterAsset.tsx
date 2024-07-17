@@ -41,7 +41,7 @@ export default function FilterAsset({
   const [checkedAll, setCheckedAll] = React.useState(false);
   const [checkedMandiri, setCheckedMandiri] = React.useState(false);
   const [checkedVendor, setCheckedVendor] = React.useState(false);
-  const [checkedPeremajaan, setCheckedPeremajaan] = React.useState(false);
+  const [checkedBaik, setCheckedBaik] = React.useState(false);
   const [checkedTw1, setCheckedTw1] = React.useState(false);
   const [checkedTw2, setCheckedTw2] = React.useState(false);
   const [checkedTw3, setCheckedTw3] = React.useState(false);
@@ -91,12 +91,12 @@ export default function FilterAsset({
       setCheckedAll(event.target.checked);
       setCheckedMandiri(true);
       setCheckedVendor(true);
-      setCheckedPeremajaan(true);
+      setCheckedBaik(true);
     } else {
       setCheckedAll(event.target.checked);
       setCheckedMandiri(false);
       setCheckedVendor(false);
-      setCheckedPeremajaan(false);
+      setCheckedBaik(false);
     }
   };
 
@@ -105,9 +105,9 @@ export default function FilterAsset({
     let assetImprovementType = Array<any>();
     if (checkedAll) {
       assetImprovementType = [
+        "Baik",
         "Perbaikan Mandiri",
         "Perbaikan Vendor",
-        "Peremajaan",
       ];
     } else {
       if (checkedMandiri) {
@@ -118,8 +118,8 @@ export default function FilterAsset({
         assetImprovementType.push("Perbaikan Vendor");
       }
 
-      if (checkedPeremajaan) {
-        assetImprovementType.push("Peremajaan");
+      if (checkedBaik) {
+        assetImprovementType.push("Baik");
       }
     }
 
@@ -234,7 +234,7 @@ export default function FilterAsset({
                     alignItems="center"
                     justifyContent="space-between"
                   >
-                    <Typography fontWeight="600">Kondisi Aset</Typography>
+                    <Typography fontWeight="600">Status Aset</Typography>
 
                     <Stack direction="row" alignItems="center" spacing={0.5}>
                       <Typography fontWeight="400">All</Typography>
@@ -249,6 +249,19 @@ export default function FilterAsset({
                   </Stack>
 
                   <Stack direction="column" spacing={2}>
+                    <Stack direction="row" alignItems="center" spacing={0.5}>
+                      <Checkbox
+                        checked={checkedBaik}
+                        onChange={(event) =>
+                          setCheckedBaik(event.target.checked)
+                        }
+                        aria-label="Baik"
+                        size="small"
+                        style={{ padding: 0 }}
+                      />
+                      <Typography fontWeight="400">Baik</Typography>
+                    </Stack>
+                    
                     <Stack direction="row" alignItems="center" spacing={0.5}>
                       <Checkbox
                         checked={checkedMandiri}
@@ -277,18 +290,7 @@ export default function FilterAsset({
                       <Typography fontWeight="400">Perbaikan Vendor</Typography>
                     </Stack>
 
-                    <Stack direction="row" alignItems="center" spacing={0.5}>
-                      <Checkbox
-                        checked={checkedPeremajaan}
-                        onChange={(event) =>
-                          setCheckedPeremajaan(event.target.checked)
-                        }
-                        aria-label="Peremajaan"
-                        size="small"
-                        style={{ padding: 0 }}
-                      />
-                      <Typography fontWeight="400">Peremajaan</Typography>
-                    </Stack>
+                    
                   </Stack>
                 </Stack>
               </Box>

@@ -82,7 +82,7 @@ export default function ModalUpdateYearQuarter({
         setIsloading(false);
         setSnackbar({
           isOpen: true,
-          message: "Berhasil menambah Tahun Kuartal!",
+          message: "Berhasil menambah Tahun!",
           severity: "success",
         });
         onSuccess();
@@ -156,9 +156,9 @@ export default function ModalUpdateYearQuarter({
           },
         }}
       >
-        <DialogTitle>Edit Tahun Kuartal</DialogTitle>
+        <DialogTitle>Edit Tahun</DialogTitle>
         <DialogContent>
-          <DialogContentText>Silahkan masukkan Tahun Kuartal</DialogContentText>
+          <DialogContentText>Silahkan masukkan Tahun</DialogContentText>
           <Stack direction="column" spacing={2} mt={2}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Tahun</InputLabel>

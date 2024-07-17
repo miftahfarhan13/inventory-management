@@ -116,18 +116,18 @@ export default function FilterAssetLog({
     const dateRange = range ? range : [];
     let status = Array<any>();
     if (checkedAll) {
-      status = ["Menunggu Persetujuan", "Sukses", "Gagal"];
+      status = ["Menunggu Persetujuan", "Setuju", "Tolak"];
     } else {
       if (checkedWaiting) {
         status.push("Menunggu Persetujuan");
       }
 
       if (checkedSuccess) {
-        status.push("Sukses");
+        status.push("Setuju");
       }
 
       if (checkedFailed) {
-        status.push("Gagal");
+        status.push("Tolak");
       }
     }
 
@@ -282,11 +282,11 @@ export default function FilterAssetLog({
                           onChange={(event) =>
                             setcheckedSuccess(event.target.checked)
                           }
-                          aria-label="Checkbox Sukses"
+                          aria-label="Checkbox Setuju"
                           size="small"
                           style={{ padding: 0 }}
                         />
-                        <Typography fontWeight="400">Sukses</Typography>
+                        <Typography fontWeight="400">Setuju</Typography>
                       </Stack>
 
                       <Stack direction="row" alignItems="center" spacing={0.5}>
@@ -295,11 +295,11 @@ export default function FilterAssetLog({
                           onChange={(event) =>
                             setcheckedFailed(event.target.checked)
                           }
-                          aria-label="Checkbox Gagal"
+                          aria-label="Checkbox Tolak"
                           size="small"
                           style={{ padding: 0 }}
                         />
-                        <Typography fontWeight="400">Gagal</Typography>
+                        <Typography fontWeight="400">Tolak</Typography>
                       </Stack>
                     </Stack>
                   </Stack>
@@ -394,13 +394,13 @@ export default function FilterAssetLog({
                       onChange={(event) => setType(event.target.value)}
                     >
                       <MenuItem>Pilih Jenis Perbaikan</MenuItem>
+                      <MenuItem value="Baik">Baik</MenuItem>
                       <MenuItem value="Perbaikan Mandiri">
                         Perbaikan Mandiri
                       </MenuItem>
                       <MenuItem value="Perbaikan Vendor">
                         Perbaikan Vendor
                       </MenuItem>
-                      <MenuItem value="Peremajaan">Peremajaan</MenuItem>
                     </Select>
                   </FormControl>
                 </Stack>

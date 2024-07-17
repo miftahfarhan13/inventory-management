@@ -76,7 +76,7 @@ export default function ModalCreateYearQuarter({
         setIsloading(false);
         setSnackbar({
           isOpen: true,
-          message: "Berhasil menambah Tahun Kuartal!",
+          message: "Berhasil menambah Tahun!",
           severity: "success",
         });
         onSuccess();
@@ -101,7 +101,7 @@ export default function ModalCreateYearQuarter({
         onClick={handleClickOpen}
         startIcon={<IconPlus size="16" />}
       >
-        Tambah Tahun Kuartal
+        Tambah Tahun
       </Button>
       <SnackbarAlert
         message={snackbar.message}
@@ -132,10 +132,10 @@ export default function ModalCreateYearQuarter({
           },
         }}
       >
-        <DialogTitle>Tambah Tahun Kuartal</DialogTitle>
+        <DialogTitle>Tambah Tahun</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Silahkan masukkan data Tahun Kuartal
+            Silahkan masukkan data Tahun
           </DialogContentText>
           <Stack direction="column" spacing={2} mt={2}>
             <FormControl fullWidth>

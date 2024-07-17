@@ -110,7 +110,7 @@ const Location = () => {
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="subtitle2" fontWeight={600}>
-                      Action
+                      Aksi
                     </Typography>
                   </TableCell>
                 </TableRow>

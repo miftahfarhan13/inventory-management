@@ -66,7 +66,7 @@ export default function PercentageStatusLog() {
                       }}
                     >
                       <Stack direction="column" spacing={2} alignItems="center">
-                        <Typography fontWeight="600">Sukses</Typography>
+                        <Typography fontWeight="600">Setuju</Typography>
                         <Typography fontWeight="700" fontSize="30px">
                           {percentageSuccessTw1}%
                         </Typography>
@@ -83,7 +83,7 @@ export default function PercentageStatusLog() {
                       }}
                     >
                       <Stack direction="column" spacing={2} alignItems="center">
-                        <Typography fontWeight="600">Gagal</Typography>
+                        <Typography fontWeight="600">Tolak</Typography>
                         <Typography fontWeight="700" fontSize="30px">
                           {percentageFailedTw1}%
                         </Typography>
@@ -107,7 +107,7 @@ export default function PercentageStatusLog() {
                       }}
                     >
                       <Stack direction="column" spacing={2} alignItems="center">
-                        <Typography fontWeight="600">Sukses</Typography>
+                        <Typography fontWeight="600">Setuju</Typography>
                         <Typography fontWeight="700" fontSize="30px">
                           {percentageSuccessTw2}%
                         </Typography>
@@ -124,7 +124,7 @@ export default function PercentageStatusLog() {
                       }}
                     >
                       <Stack direction="column" spacing={2} alignItems="center">
-                        <Typography fontWeight="600">Gagal</Typography>
+                        <Typography fontWeight="600">Tolak</Typography>
                         <Typography fontWeight="700" fontSize="30px">
                           {percentageFailedTw2}%
                         </Typography>
@@ -148,7 +148,7 @@ export default function PercentageStatusLog() {
                       }}
                     >
                       <Stack direction="column" spacing={2} alignItems="center">
-                        <Typography fontWeight="600">Sukses</Typography>
+                        <Typography fontWeight="600">Setuju</Typography>
                         <Typography fontWeight="700" fontSize="30px">
                           {percentageSuccessTw3}%
                         </Typography>
@@ -165,7 +165,7 @@ export default function PercentageStatusLog() {
                       }}
                     >
                       <Stack direction="column" spacing={2} alignItems="center">
-                        <Typography fontWeight="600">Gagal</Typography>
+                        <Typography fontWeight="600">Tolak</Typography>
                         <Typography fontWeight="700" fontSize="30px">
                           {percentageFailedTw3}%
                         </Typography>

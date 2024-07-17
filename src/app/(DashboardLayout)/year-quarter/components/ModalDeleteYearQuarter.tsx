@@ -45,7 +45,7 @@ export default function ModalDeleteYearQuarter({
         setIsloading(false);
         setSnackbar({
           isOpen: true,
-          message: "Berhasil menghapus Tahun Kuartal!",
+          message: "Berhasil menghapus Tahun!",
           severity: "success",
         });
         onSuccess();
@@ -99,10 +99,10 @@ export default function ModalDeleteYearQuarter({
           },
         }}
       >
-        <DialogTitle>Hapus Tahun Kuartal</DialogTitle>
+        <DialogTitle>Hapus Tahun</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Apakah anda yakin ingin menghapus Tahun Kuartal?
+            Apakah anda yakin ingin menghapus Tahun?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

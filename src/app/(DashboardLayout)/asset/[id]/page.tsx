@@ -277,7 +277,7 @@ const DetailAsset = () => {
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        Kondisi Aset Sekarang
+                        Status Aset
                       </TableCell>
                       <TableCell align="right">
                         <Chip
