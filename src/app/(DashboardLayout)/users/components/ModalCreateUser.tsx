@@ -184,7 +184,8 @@ export default function ModalCreateUser({
             <FormControl style={{ minWidth: "100px" }}>
               <InputLabel id="role-label">Role</InputLabel>
               <Select labelId="role-label" label="Role" name="role">
-                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="admin-1">Admin 1</MenuItem>
+                <MenuItem value="admin-2">Admin 2</MenuItem>
                 <MenuItem value="user">User</MenuItem>
               </Select>
             </FormControl>
