@@ -121,6 +121,10 @@ export default function ModalUpdateYearQuarter({
     const tw3 = [new Date(data?.start_tw_3), new Date(data?.end_tw_3)];
     // @ts-ignore
     setRange3(tw3);
+
+    const tw4 = [new Date(data?.start_tw_4), new Date(data?.end_tw_4)];
+    // @ts-ignore
+    setRange4(tw4);
   }, [data]);
 
   return (

@@ -5,11 +5,13 @@ import {
   InputLabel,
   MenuItem,
   Pagination,
+  Paper,
   Select,
   Stack,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   TextField,
@@ -82,161 +84,183 @@ const YearQuarter = () => {
                 onSuccess={() => fetchyearQuarter("1", show)}
               />
             </Stack>
-            <Table
-              aria-label="simple table"
-              sx={{
-                whiteSpace: "nowrap",
-                mt: 2,
-              }}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>
-                    <Typography variant="subtitle2" fontWeight={600}>
-                      No
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2" fontWeight={600}>
-                      Tahun
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2" fontWeight={600}>
-                      Rentang TW 1
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2" fontWeight={600}>
-                      Rentang TW 2
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2" fontWeight={600}>
-                      Rentang TW 3
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2" fontWeight={600}>
-                      Rentang TW 4
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2" fontWeight={600}>
-                      Dibuat Oleh
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="subtitle2" fontWeight={600}>
-                      Aksi
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {yearQuarter?.data?.map((category: any, index: number) => (
-                  <TableRow key={category?.id}>
-                    <TableCell>
-                      <Typography
-                        sx={{
-                          fontSize: "15px",
-                          fontWeight: "500",
-                        }}
-                      >
-                        {index + 1}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
+            <Paper sx={{ width: "100%", overflow: "hidden" }}>
+              <TableContainer style={{ maxWidth: "calc(100vw - 420px)" }}>
+                <Table
+                  aria-label="simple table"
+                  sx={{
+                    whiteSpace: "nowrap",
+                    mt: 2,
+                  }}
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
-                          {category?.year}
+                          No
                         </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
+                      </TableCell>
+                      <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
-                          {moment(new Date(category?.start_tw_1)).format(
-                            "DD MMMM YYYY"
-                          )}{" "}
-                          -{" "}
-                          {moment(new Date(category?.end_tw_1)).format(
-                            "DD MMMM YYYY"
-                          )}
+                          Tahun
                         </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
+                      </TableCell>
+                      <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
-                          {moment(new Date(category?.start_tw_2)).format(
-                            "DD MMMM YYYY"
-                          )}{" "}
-                          -{" "}
-                          {moment(new Date(category?.end_tw_2)).format(
-                            "DD MMMM YYYY"
-                          )}
+                          Rentang TW 1
                         </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
+                      </TableCell>
+                      <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
-                          {moment(new Date(category?.start_tw_3)).format(
-                            "DD MMMM YYYY"
-                          )}{" "}
-                          -{" "}
-                          {moment(new Date(category?.end_tw_3)).format(
-                            "DD MMMM YYYY"
-                          )}
+                          Rentang TW 2
                         </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        color="textSecondary"
-                        variant="subtitle2"
-                        fontWeight={400}
-                      >
-                        {category?.user?.name} ({category?.user?.email})
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Stack spacing={1} direction="row" justifyContent="end">
-                        <ModalUpdateYearQuarter
-                          data={category}
-                          onSuccess={() => fetchyearQuarter("1", show)}
-                        />
-                        <ModalDeleteYearQuarter
-                          id={category?.id}
-                          onSuccess={() => fetchyearQuarter("1", show)}
-                        />
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          Rentang TW 3
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          Rentang TW 4
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          Dibuat Oleh
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          Aksi
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {yearQuarter?.data?.map((year: any, index: number) => (
+                      <TableRow key={year?.id}>
+                        <TableCell>
+                          <Typography
+                            sx={{
+                              fontSize: "15px",
+                              fontWeight: "500",
+                            }}
+                          >
+                            {index + 1}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography variant="subtitle2" fontWeight={600}>
+                              {year?.year}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography variant="subtitle2" fontWeight={600}>
+                              {moment(new Date(year?.start_tw_1)).format(
+                                "DD MMMM YYYY"
+                              )}{" "}
+                              -{" "}
+                              {moment(new Date(year?.end_tw_1)).format(
+                                "DD MMMM YYYY"
+                              )}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography variant="subtitle2" fontWeight={600}>
+                              {moment(new Date(year?.start_tw_2)).format(
+                                "DD MMMM YYYY"
+                              )}{" "}
+                              -{" "}
+                              {moment(new Date(year?.end_tw_2)).format(
+                                "DD MMMM YYYY"
+                              )}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography variant="subtitle2" fontWeight={600}>
+                              {moment(new Date(year?.start_tw_3)).format(
+                                "DD MMMM YYYY"
+                              )}{" "}
+                              -{" "}
+                              {moment(new Date(year?.end_tw_3)).format(
+                                "DD MMMM YYYY"
+                              )}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography variant="subtitle2" fontWeight={600}>
+                              {moment(new Date(year?.start_tw_4)).format(
+                                "DD MMMM YYYY"
+                              )}{" "}
+                              -{" "}
+                              {moment(new Date(year?.end_tw_4)).format(
+                                "DD MMMM YYYY"
+                              )}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            color="textSecondary"
+                            variant="subtitle2"
+                            fontWeight={400}
+                          >
+                            {year?.user?.name} ({year?.user?.email})
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Stack spacing={1} direction="row" justifyContent="end">
+                            <ModalUpdateYearQuarter
+                              data={year}
+                              onSuccess={() => fetchyearQuarter("1", show)}
+                            />
+                            <ModalDeleteYearQuarter
+                              id={year?.id}
+                              onSuccess={() => fetchyearQuarter("1", show)}
+                            />
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
           </Box>
           <Box display="flex" justifyContent="space-between">
             <FormControl style={{ minWidth: "100px" }}>
