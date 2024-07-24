@@ -118,6 +118,11 @@ const YearQuarter = () => {
                   </TableCell>
                   <TableCell>
                     <Typography variant="subtitle2" fontWeight={600}>
+                      Rentang TW 4
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="subtitle2" fontWeight={600}>
                       Dibuat Oleh
                     </Typography>
                   </TableCell>

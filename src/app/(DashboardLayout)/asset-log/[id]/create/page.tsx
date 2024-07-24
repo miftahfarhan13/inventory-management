@@ -50,7 +50,7 @@ const CreateAssetLog = () => {
     validation_by_laboratory_date,
     type,
     repair_time_plan_date,
-    contact_technician,
+    technician_name,
     improvement_price,
     actual_repair_start_date,
     actual_repair_end_date,
@@ -62,7 +62,7 @@ const CreateAssetLog = () => {
     validation_by_laboratory_date: string;
     type: string;
     repair_time_plan_date: string;
-    contact_technician: string;
+    technician_name: string;
     improvement_price: number;
     actual_repair_start_date: string;
     actual_repair_end_date: string;
@@ -95,7 +95,7 @@ const CreateAssetLog = () => {
       validation_by_laboratory_date,
       type,
       repair_time_plan_date,
-      contact_technician,
+      technician_name,
       improvement_price,
       actual_repair_start_date,
       actual_repair_end_date,
@@ -187,7 +187,7 @@ const CreateAssetLog = () => {
                 formJson.validation_by_laboratory_date;
               const type = formJson.type;
               const repair_time_plan_date = formJson.repair_time_plan_date;
-              const contact_technician = formJson.contact_technician;
+              const technician_name = formJson.technician_name;
               const actual_repair_start_date =
                 formJson.actual_repair_start_date;
               const actual_repair_end_date = formJson.actual_repair_end_date;
@@ -200,7 +200,7 @@ const CreateAssetLog = () => {
                 validation_by_laboratory_date,
                 type,
                 repair_time_plan_date,
-                contact_technician,
+                technician_name,
                 improvement_price,
                 actual_repair_start_date,
                 actual_repair_end_date,
@@ -338,7 +338,7 @@ const CreateAssetLog = () => {
                           fullWidth
                           placeholder="Nama Teknisi"
                           label="Nama Teknisi"
-                          name="contact_technician"
+                          name="technician_name"
                           required
                         />
                       </Stack>

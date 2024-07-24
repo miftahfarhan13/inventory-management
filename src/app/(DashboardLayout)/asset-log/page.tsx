@@ -453,7 +453,7 @@ const AssetLogByAssetId = () => {
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
-                                {asset?.contact_technician}
+                                {asset?.technician_name}
                               </Typography>
                             </Box>
                           </TableCell>

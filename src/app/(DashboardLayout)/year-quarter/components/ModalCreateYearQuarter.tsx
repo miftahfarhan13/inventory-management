@@ -30,6 +30,7 @@ export default function ModalCreateYearQuarter({
   const [range1, setRange1] = React.useState<[Date, Date]>();
   const [range2, setRange2] = React.useState<[Date, Date]>();
   const [range3, setRange3] = React.useState<[Date, Date]>();
+  const [range4, setRange4] = React.useState<[Date, Date]>();
 
   const [isLoading, setIsloading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -53,6 +54,7 @@ export default function ModalCreateYearQuarter({
     const tw1 = range1 || [];
     const tw2 = range2 || [];
     const tw3 = range3 || [];
+    const tw4 = range4 || [];
 
     const startTw1 = moment(new Date(tw1[0] || "")).format("yyyy-MM-DD");
     const endTw1 = moment(new Date(tw1[1] || "")).format("yyyy-MM-DD");
@@ -63,6 +65,9 @@ export default function ModalCreateYearQuarter({
     const startTw3 = moment(new Date(tw3[0] || "")).format("yyyy-MM-DD");
     const endTw3 = moment(new Date(tw3[1] || "")).format("yyyy-MM-DD");
 
+    const startTw4 = moment(new Date(tw4[0] || "")).format("yyyy-MM-DD");
+    const endTw4 = moment(new Date(tw4[1] || "")).format("yyyy-MM-DD");
+
     await fetchCreateYearQuarter(token, {
       year: year,
       start_tw_1: startTw1,
@@ -71,6 +76,8 @@ export default function ModalCreateYearQuarter({
       end_tw_2: endTw2,
       start_tw_3: startTw3,
       end_tw_3: endTw3,
+      start_tw_4: startTw4,
+      end_tw_4: endTw4,
     })
       .then((response) => {
         setIsloading(false);
@@ -177,6 +184,15 @@ export default function ModalCreateYearQuarter({
               onChange={(value) => setRange3(value)}
               placeholder="Rentang TW 3"
               disabled={!range2}
+              allowedRangeStart={`${year}-01-01`}
+              allowedRangeEnd={`${year}-12-31`}
+            />
+
+            <DatePickerRange
+              value={range4}
+              onChange={(value) => setRange4(value)}
+              placeholder="Rentang TW 4"
+              disabled={!range3}
               allowedRangeStart={`${year}-01-01`}
               allowedRangeEnd={`${year}-12-31`}
             />
