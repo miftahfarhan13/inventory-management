@@ -77,6 +77,7 @@ const CreateAsset = () => {
   }, []);
 
   const onCreateAsset = async ({
+    assetUid,
     assetCode,
     name,
     categoryId,
@@ -87,6 +88,7 @@ const CreateAsset = () => {
     purchaseDate,
     routineRepairTime,
   }: {
+    assetUid: string;
     assetCode: string;
     name: string;
     categoryId: number;
@@ -105,6 +107,7 @@ const CreateAsset = () => {
         category_id: categoryId,
         location_id: locationId,
         asset_code: assetCode,
+        asset_uid: assetUid,
         name,
         price,
         brand,
@@ -188,6 +191,7 @@ const CreateAsset = () => {
               const formJson = Object.fromEntries((formData as any).entries());
               const name = formJson.name;
               const assetCode = formJson.assetCode;
+              const assetUid = formJson.assetUid;
               const categoryId = parseInt(formJson.categoryId);
               const locationId = parseInt(formJson.locationId);
               const price = parseInt(formJson.price);
@@ -197,6 +201,7 @@ const CreateAsset = () => {
               const routineRepairTime = formJson.routineRepairTime;
 
               onCreateAsset({
+                assetUid,
                 assetCode,
                 name,
                 categoryId,
@@ -283,6 +288,18 @@ const CreateAsset = () => {
                     </Grid>
                     <Grid item xs={12} lg={6}>
                       <Stack direction="column" spacing={3}>
+                        <Stack direction="column" spacing={1}>
+                          <Typography fontWeight={700}>UID Aset</Typography>
+                          <TextField
+                            fullWidth
+                            placeholder="UID Aset"
+                            label="UID"
+                            name="assetUid"
+                            required
+                            defaultValue={asset?.asset_uid}
+                          />
+                        </Stack>
+                        
                         <Stack direction="column" spacing={1}>
                           <Typography fontWeight={700}>
                             Vendor Pembelian

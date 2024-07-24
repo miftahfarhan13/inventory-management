@@ -14,7 +14,7 @@ const SidebarItems = ({ toggleMobileSidebar }: any) => {
   const { user } = useGetMe();
   const role = user?.role;
 
-  const menus = role === "admin" ? Menuitems : MenuItemsUser;
+  const menus = role === "admin-1" || role === "admin-2" ? Menuitems : MenuItemsUser;
 
   return (
     <Box sx={{ px: 3 }}>

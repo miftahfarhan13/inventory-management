@@ -550,7 +550,7 @@ const AssetLogByAssetId = () => {
                             </Typography>
                           </TableCell>
                           <StyledTableCell>
-                            {user?.role === "admin" ? (
+                            {user?.role === "admin-1" || user?.role === "admin-2" ? (
                               <>
                                 {asset?.approved_user?.name ? (
                                   <>
