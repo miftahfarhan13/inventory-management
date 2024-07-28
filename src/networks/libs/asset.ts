@@ -31,6 +31,15 @@ export function getAsset(id: string, token: string) {
   return axiosClient.get(`/assets/${id}`, config);
 }
 
+export function getAssetByUid(uid: string, token: string) {
+  let config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosClient.get(`/assets/uid/${uid}`, config);
+}
+
 export function fetchCreateAsset(token: string, data: any) {
   let config = {
     headers: {

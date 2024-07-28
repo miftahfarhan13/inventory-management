@@ -70,6 +70,7 @@ const Asset = () => {
         id: asset?.id,
         no: index + 1,
         asset_code: asset?.asset_code,
+        asset_uid: asset?.asset_uid,
         name: asset?.name,
         location: asset?.location?.name,
         study_program: asset?.location?.study_program?.name,
@@ -223,6 +224,14 @@ const Asset = () => {
                           </TableCell>
                           <TableCell
                             style={{ cursor: 'pointer' }}
+                            onClick={() => handleSort('asset_uid')}
+                          >
+                            <Typography variant="subtitle2" fontWeight={600}>
+                              UID aset &nbsp; <IconArrowsSort size="15" />
+                            </Typography>
+                          </TableCell>
+                          <TableCell
+                            style={{ cursor: 'pointer' }}
                             onClick={() => handleSort('name')}
                           >
                             <Typography variant="subtitle2" fontWeight={600}>
@@ -313,6 +322,21 @@ const Asset = () => {
                                     fontWeight={600}
                                   >
                                     #{asset?.asset_code}
+                                  </Typography>
+                                </Box>
+                              </TableCell>
+                              <TableCell>
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    alignItems: 'center'
+                                  }}
+                                >
+                                  <Typography
+                                    variant="subtitle2"
+                                    fontWeight={600}
+                                  >
+                                    #{asset?.asset_uid}
                                   </Typography>
                                 </Box>
                               </TableCell>

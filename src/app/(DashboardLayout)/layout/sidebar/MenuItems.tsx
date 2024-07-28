@@ -7,6 +7,8 @@ import {
   IconCategory,
   IconLocation,
   IconBellSchool,
+  IconSearch,
+  IconTablePlus,
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
@@ -38,6 +40,18 @@ const Menuitems = [
     title: "Log Perbaikan Aset",
     icon: IconList,
     href: "/asset-log",
+  },
+  {
+    id: uniqueId(),
+    title: "Cari Aset",
+    icon: IconSearch,
+    href: "/find-asset",
+  },
+  {
+    id: uniqueId(),
+    title: "Bulk Perbaikan Aset",
+    icon: IconTablePlus,
+    href: "/asset-log-bulk",
   },
   // {
   //   navlabel: true,
