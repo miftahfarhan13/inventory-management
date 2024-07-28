@@ -49,11 +49,10 @@ const CreateAssetLog = () => {
     report_date,
     validation_by_laboratory_date,
     type,
-    repair_time_plan_date,
+    asset_needed_date,
     technician_name,
     improvement_price,
-    actual_repair_start_date,
-    actual_repair_end_date,
+    urgency,
   }: {
     description: string;
     reporter: string;
@@ -61,24 +60,15 @@ const CreateAssetLog = () => {
     report_date: string;
     validation_by_laboratory_date: string;
     type: string;
-    repair_time_plan_date: string;
+    asset_needed_date: string;
     technician_name: string;
     improvement_price: number;
-    actual_repair_start_date: string;
-    actual_repair_end_date: string;
+    urgency: string;
   }) => {
-    if (!actual_repair_start_date) {
+    if (!asset_needed_date) {
       return setSnackbar({
         isOpen: true,
-        message: "Silakan isi Realisasi Waktu Mulai Perbaikan",
-        severity: "error",
-      });
-    }
-
-    if (!actual_repair_end_date) {
-      return setSnackbar({
-        isOpen: true,
-        message: "Realisasi Waktu Selesai Perbaikan",
+        message: "Silakan isi Waktu Aset Dibutuhkan",
         severity: "error",
       });
     }
@@ -94,12 +84,11 @@ const CreateAssetLog = () => {
       report_date,
       validation_by_laboratory_date,
       type,
-      repair_time_plan_date,
+      asset_needed_date,
       technician_name,
       improvement_price,
-      actual_repair_start_date,
-      actual_repair_end_date,
       additional_document: fileUrl,
+      urgency
     })
       .then((response) => {
         setIsloading(false);
@@ -186,11 +175,9 @@ const CreateAssetLog = () => {
               const validation_by_laboratory_date =
                 formJson.validation_by_laboratory_date;
               const type = formJson.type;
-              const repair_time_plan_date = formJson.repair_time_plan_date;
+              const asset_needed_date = formJson.asset_needed_date;
               const technician_name = formJson.technician_name;
-              const actual_repair_start_date =
-                formJson.actual_repair_start_date;
-              const actual_repair_end_date = formJson.actual_repair_end_date;
+              const urgency = formJson.urgency;
 
               onCreateAsset({
                 description,
@@ -199,11 +186,10 @@ const CreateAssetLog = () => {
                 report_date,
                 validation_by_laboratory_date,
                 type,
-                repair_time_plan_date,
+                asset_needed_date,
                 technician_name,
                 improvement_price,
-                actual_repair_start_date,
-                actual_repair_end_date,
+                urgency,
               });
             }}
           >
@@ -240,6 +226,20 @@ const CreateAssetLog = () => {
                           multiline
                           rows={4}
                           name="description"
+                          required
+                        />
+                      </Stack>
+
+                      <Stack direction="column" spacing={1}>
+                        <Typography fontWeight={700}>
+                          Urgensi
+                        </Typography>
+                        <TextField
+                          id="standard-multiline-static"
+                          label="Urgensi"
+                          multiline
+                          rows={4}
+                          name="urgency"
                           required
                         />
                       </Stack>
@@ -309,7 +309,6 @@ const CreateAssetLog = () => {
                             name="type"
                             required
                           >
-                            <MenuItem value="Baik">Baik</MenuItem>
                             <MenuItem value="Perbaikan Mandiri">
                               Perbaikan Mandiri
                             </MenuItem>
@@ -322,11 +321,11 @@ const CreateAssetLog = () => {
 
                       <Stack direction="column" spacing={1}>
                         <Typography fontWeight={700}>
-                          Rencana Waktu Perbaikan Selesai
+                          Waktu Aset Dibutuhkan
                         </Typography>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
-                            name="repair_time_plan_date"
+                            name="asset_needed_date"
                             format="YYYY-MM-DD"
                           />
                         </LocalizationProvider>
@@ -372,30 +371,7 @@ const CreateAssetLog = () => {
                           url={fileUrl}
                           onChangeValue={(value) => setfileUrl(value)}
                         />
-                      </Stack>
-
-                      <Stack direction="column" spacing={1}>
-                        <Typography fontWeight={700}>
-                          Realisasi Waktu Mulai Perbaikan
-                        </Typography>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker
-                            name="actual_repair_start_date"
-                            format="YYYY-MM-DD"
-                          />
-                        </LocalizationProvider>
-                      </Stack>
-                      <Stack direction="column" spacing={1}>
-                        <Typography fontWeight={700}>
-                          Realisasi Waktu Selesai Perbaikan
-                        </Typography>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker
-                            name="actual_repair_end_date"
-                            format="YYYY-MM-DD"
-                          />
-                        </LocalizationProvider>
-                      </Stack>
+                      </Stack>              
                     </Stack>
                   </Grid>
                 </Grid>

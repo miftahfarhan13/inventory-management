@@ -293,7 +293,6 @@ const CreateAsset = () => {
                           <TextField
                             fullWidth
                             placeholder="UID Aset"
-                            label="UID"
                             name="assetUid"
                             required
                             defaultValue={asset?.asset_uid}

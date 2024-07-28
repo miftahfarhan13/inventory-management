@@ -1,28 +1,27 @@
-"use client";
+'use client';
 import {
   Box,
   Breadcrumbs,
   Button,
   Chip,
-  Grid,
   Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  Typography,
-} from "@mui/material";
-import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
-import DashboardCard from "@/app/(DashboardLayout)/components/shared/DashboardCard";
-import { useEffect, useRef, useState } from "react";
-import { getAsset } from "@/networks/libs/asset";
-import { IconChevronRight, IconDownload, IconEdit } from "@tabler/icons-react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import moment from "moment";
-import { formatter } from "@/utils/number";
-import { useReactToPrint } from "react-to-print";
+  Typography
+} from '@mui/material';
+import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
+import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
+import { useEffect, useRef, useState } from 'react';
+import { getAsset } from '@/networks/libs/asset';
+import { IconChevronRight, IconDownload, IconEdit } from '@tabler/icons-react';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import moment from 'moment';
+import { formatter } from '@/utils/number';
+import { useReactToPrint } from 'react-to-print';
 
 const DetailAsset = () => {
   const { id } = useParams();
@@ -31,7 +30,7 @@ const DetailAsset = () => {
   const [asset, setAsset] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
   const fetchAsset = () => {
-    const token = localStorage.getItem("token") || "";
+    const token = localStorage.getItem('token') || '';
     setIsLoading(true);
     getAsset(id.toString(), token)
       .then((response) => {
@@ -53,8 +52,8 @@ const DetailAsset = () => {
   const price = asset?.price;
   const totalDepreciation = 0.05 * price;
 
-  const currentYear = moment(new Date()).format("YYYY");
-  const inputDataYear = moment(new Date(asset?.created_at)).format("YYYY");
+  const currentYear = moment(new Date()).format('YYYY');
+  const inputDataYear = moment(new Date(asset?.created_at)).format('YYYY');
   const assetAge = parseInt(currentYear) - parseInt(inputDataYear);
 
   const currentValue = price - assetAge * totalDepreciation;
@@ -65,11 +64,11 @@ const DetailAsset = () => {
       )
     : [];
 
-  const lastRepair = assetImprovements ? assetImprovements[0]?.created_at : "";
+  const lastRepair = assetImprovements ? assetImprovements[0]?.created_at : '';
 
   const nextRepair = moment(new Date(lastRepair))
-    .add(1, "M")
-    .format("DD/MM/YYYY");
+    .add(1, 'M')
+    .format('DD/MM/YYYY');
 
   const totalLogPrice = assetImprovements?.reduce(
     (total: number, currentItem: any) => {
@@ -78,24 +77,19 @@ const DetailAsset = () => {
     0
   );
 
-  const status =
-    assetImprovements && assetImprovements?.length > 0
-      ? assetImprovements[0]?.type
-      : "Baik";
-
   const breadcrumbs = [
     <Link key="1" href="/asset">
       List Aset
     </Link>,
     <Typography key="2" color="text.primary">
       Detail Aset
-    </Typography>,
+    </Typography>
   ];
 
   const generatePDF = useReactToPrint({
     // @ts-ignore
     content: () => componentPdf.current,
-    documentTitle: `Asset Data ${asset?.asset_code}`,
+    documentTitle: `Asset Data ${asset?.asset_code}`
   });
 
   return (
@@ -130,13 +124,13 @@ const DetailAsset = () => {
             </Stack>
 
             <Stack
-              direction={{ xs: "column-reverse", md: "row" }}
+              direction={{ xs: 'column-reverse', md: 'row' }}
               spacing={4}
               ref={componentPdf}
             >
               <Stack direction="column" spacing={2} flexGrow={1}>
                 <Table aria-label="simple table" size="small">
-                  <TableHead style={{ backgroundColor: "#5D87FF" }}>
+                  <TableHead style={{ backgroundColor: '#5D87FF' }}>
                     <TableRow>
                       <TableCell>
                         <Typography fontWeight={700} color="white">
@@ -146,7 +140,7 @@ const DetailAsset = () => {
                       <TableCell align="right">
                         <Typography color="white">
                           {moment(new Date(asset?.created_at)).format(
-                            "DD/MM/YYYY"
+                            'DD/MM/YYYY'
                           )}
                         </Typography>
                       </TableCell>
@@ -158,6 +152,18 @@ const DetailAsset = () => {
                         Kode Aset
                       </TableCell>
                       <TableCell align="right">#{asset?.asset_code}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        UID Aset
+                      </TableCell>
+                      <TableCell align="right">#{asset?.asset_uid}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        Kategori Aset
+                      </TableCell>
+                      <TableCell align="right">{asset?.category?.name}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">
@@ -199,7 +205,7 @@ const DetailAsset = () => {
                       </TableCell>
                       <TableCell align="right">
                         {moment(new Date(asset?.purchase_date)).format(
-                          "DD/MM/YYYY"
+                          'DD/MM/YYYY'
                         )}
                       </TableCell>
                     </TableRow>
@@ -263,8 +269,8 @@ const DetailAsset = () => {
                       </TableCell>
                       <TableCell align="right">
                         {lastRepair
-                          ? moment(new Date(lastRepair)).format("DD/MM/YYYY")
-                          : "-"}
+                          ? moment(new Date(lastRepair)).format('DD/MM/YYYY')
+                          : '-'}
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -272,7 +278,7 @@ const DetailAsset = () => {
                         Perbaikan Selanjutnya
                       </TableCell>
                       <TableCell align="right">
-                        {lastRepair ? nextRepair : "-"}
+                        {lastRepair ? nextRepair : '-'}
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -282,13 +288,15 @@ const DetailAsset = () => {
                       <TableCell align="right">
                         <Chip
                           sx={{
-                            px: "4px",
+                            px: '4px',
                             backgroundColor:
-                              status === "Baik" ? "success.main" : "error.main",
-                            color: "#fff",
+                              asset?.status === 'Baik'
+                                ? 'success.main'
+                                : 'error.main',
+                            color: '#fff'
                           }}
                           size="small"
-                          label={status}
+                          label={asset?.status}
                         ></Chip>
                       </TableCell>
                     </TableRow>
@@ -306,10 +314,10 @@ const DetailAsset = () => {
               <Stack direction="column" alignItems="center" flexGrow={1}>
                 <Box border="2px solid grey" padding="16px" borderRadius="10px">
                   <img
-                    src={asset?.image_url || "/images/default-image.jpeg"}
+                    src={asset?.image_url || '/images/default-image.jpeg'}
                     width={400}
                     height={300}
-                    style={{ objectFit: "contain" }}
+                    style={{ objectFit: 'contain' }}
                   />
                 </Box>
               </Stack>

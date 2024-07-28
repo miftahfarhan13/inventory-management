@@ -27,7 +27,7 @@ export function formatRupiah(amount: number) {
 
 export function calculatePercentage(part: number, total: number) {
   if (total === 0) {
-    throw new Error("Total value cannot be zero.");
+    return 0
   }
   return Math.floor((part / total) * 100);
 }

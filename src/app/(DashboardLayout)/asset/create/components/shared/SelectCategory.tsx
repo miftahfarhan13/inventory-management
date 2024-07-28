@@ -1,20 +1,20 @@
-import { getCategories } from "@/networks/libs/category";
+import { getCategories } from '@/networks/libs/category';
 import {
   FormControl,
   InputLabel,
   MenuItem,
   Select,
-  SelectProps,
-} from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+  SelectProps
+} from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function SelectCategory({ ...rest }: SelectProps) {
   const firstRun = useRef(true);
 
   const [categories, setcategories] = useState([]);
   const fetchcategories = () => {
-    const token = localStorage.getItem("token") || "";
-    getCategories("false", token)
+    const token = localStorage.getItem('token') || '';
+    getCategories('false', token)
       .then((response) => {
         setcategories(response?.data?.result);
       })
@@ -22,7 +22,7 @@ export default function SelectCategory({ ...rest }: SelectProps) {
   };
 
   useEffect(() => {
-    if (firstRun.current) {
+    if (firstRun.current && categories?.length === 0) {
       fetchcategories();
       firstRun.current = false;
     }
@@ -39,8 +39,10 @@ export default function SelectCategory({ ...rest }: SelectProps) {
           {...rest}
         >
           <MenuItem>Pilih Kategori</MenuItem>
-          {categories?.map((category: any) => (
-            <MenuItem value={category?.id}>{category?.name}</MenuItem>
+          {categories?.map((category: any, index: number) => (
+            <MenuItem key={index} value={category?.id}>
+              {category?.name}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>

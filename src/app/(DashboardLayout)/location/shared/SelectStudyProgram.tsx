@@ -1,20 +1,20 @@
-import { getStudyProgram } from "@/networks/libs/studyProgram";
+import { getStudyProgram } from '@/networks/libs/studyProgram';
 import {
   FormControl,
   InputLabel,
   MenuItem,
   Select,
-  SelectProps,
-} from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+  SelectProps
+} from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function SelectStudyProgram({ ...rest }: SelectProps) {
   const firstRun = useRef(true);
 
   const [studyPrograms, setStudyPrograms] = useState([]);
   const fetchstudyProgram = () => {
-    const token = localStorage.getItem("token") || "";
-    getStudyProgram("false", token)
+    const token = localStorage.getItem('token') || '';
+    getStudyProgram('false', token)
       .then((response) => {
         setStudyPrograms(response?.data?.result);
       })
@@ -22,7 +22,7 @@ export default function SelectStudyProgram({ ...rest }: SelectProps) {
   };
 
   useEffect(() => {
-    if (firstRun.current) {
+    if (firstRun.current && studyPrograms?.length === 0) {
       fetchstudyProgram();
       firstRun.current = false;
     }
@@ -39,8 +39,10 @@ export default function SelectStudyProgram({ ...rest }: SelectProps) {
           {...rest}
         >
           <MenuItem>Pilih Program Studi</MenuItem>
-          {studyPrograms?.map((program: any) => (
-            <MenuItem value={program?.id}>{program?.name}</MenuItem>
+          {studyPrograms?.map((program: any, index: number) => (
+            <MenuItem key={index} value={program?.id}>
+              {program?.name}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
