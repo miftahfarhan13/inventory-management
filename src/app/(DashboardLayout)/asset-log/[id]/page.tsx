@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   Box,
   Breadcrumbs,
@@ -18,58 +18,58 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
-} from "@mui/material";
-import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
-import DashboardCard from "@/app/(DashboardLayout)/components/shared/DashboardCard";
-import { useEffect, useRef, useState } from "react";
-import useDebounce from "@/utils/hooks/useDebounce";
-import { IconChevronRight, IconDownload, IconEye } from "@tabler/icons-react";
-import Link from "next/link";
-import { IconPlus } from "@tabler/icons-react";
-import { formatter } from "@/utils/number";
-import moment from "moment";
-import { useParams, useSearchParams } from "next/navigation";
-import { getAssetImprovementsByAssetId } from "@/networks/libs/assetImprovements";
-import ModalApprove from "./components/ModalApprove";
-import { styled } from "@mui/system";
-import { useReactToPrint } from "react-to-print";
-import useGetMe from "@/utils/hooks/useGetMe";
-import FilterAssetLog from "./components/FilterAssetLog";
+  Typography
+} from '@mui/material';
+import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
+import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
+import { useEffect, useRef, useState } from 'react';
+import useDebounce from '@/utils/hooks/useDebounce';
+import { IconChevronRight, IconDownload, IconEye } from '@tabler/icons-react';
+import Link from 'next/link';
+import { IconPlus } from '@tabler/icons-react';
+import { formatter } from '@/utils/number';
+import moment from 'moment';
+import { useParams, useSearchParams } from 'next/navigation';
+import { getAssetImprovementsByAssetId } from '@/networks/libs/assetImprovements';
+import ModalApprove from './components/ModalApprove';
+import { styled } from '@mui/system';
+import { useReactToPrint } from 'react-to-print';
+import useGetMe from '@/utils/hooks/useGetMe';
+import FilterAssetLog from './components/FilterAssetLog';
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  position: "sticky",
+  position: 'sticky',
   right: 0,
   backgroundColor: theme.palette.background.paper,
-  zIndex: 5,
+  zIndex: 5
 }));
 
 const StyledTableCellLeft = styled(TableCell)(({ theme }) => ({
-  position: "sticky",
+  position: 'sticky',
   left: 0,
   backgroundColor: theme.palette.background.paper,
-  zIndex: 5,
+  zIndex: 5
 }));
 
 const AssetLogByAssetId = () => {
   const { id } = useParams();
   const componentPdf = useRef();
   const searchParams = useSearchParams();
-  const code = searchParams.get("code");
+  const code = searchParams.get('code');
 
   const { user } = useGetMe();
   const firstRun = useRef(true);
 
   const [filtersData, setFiltersData] = useState<any>();
-  const [show, setShow] = useState("10");
-  const [keyword, setKeyword] = useState("");
+  const [show, setShow] = useState('10');
+  const [keyword, setKeyword] = useState('');
   const [asset, setAsset] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
   const fetchAsset = (page: string, show: string, filters: any) => {
-    const token = localStorage.getItem("token") || "";
+    const token = localStorage.getItem('token') || '';
     setIsLoading(true);
     getAssetImprovementsByAssetId(
-      "true",
+      'true',
       token,
       page,
       show,
@@ -88,7 +88,7 @@ const AssetLogByAssetId = () => {
 
   useEffect(() => {
     if (firstRun.current) {
-      fetchAsset("1", show, filtersData);
+      fetchAsset('1', show, filtersData);
       firstRun.current = false;
     }
   }, []);
@@ -96,7 +96,7 @@ const AssetLogByAssetId = () => {
   // DeBounce Function
   useDebounce(
     () => {
-      fetchAsset("1", show, filtersData);
+      fetchAsset('1', show, filtersData);
     },
     [keyword],
     500
@@ -104,7 +104,7 @@ const AssetLogByAssetId = () => {
 
   const onSaveFilter = (value: any) => {
     setFiltersData(value);
-    fetchAsset("1", show, value);
+    fetchAsset('1', show, value);
   };
 
   const breadcrumbs = [
@@ -116,22 +116,22 @@ const AssetLogByAssetId = () => {
     </Link>,
     <Typography key="2" color="text.primary">
       Log Perbaikan
-    </Typography>,
+    </Typography>
   ];
 
   const generatePDF = useReactToPrint({
     // @ts-ignore
     content: () => componentPdf.current,
-    documentTitle: "Asset Data Perbaikan",
+    documentTitle: 'Asset Data Perbaikan'
   });
 
   return (
     <PageContainer title={`Log Perbaikan #${code}`} description="Log Perbaikan">
       <style type="text/css" media="print">
         {
-          "\
+          '\
         @page { size: landscape; }\
-      "
+      '
         }
       </style>
       <DashboardCard title={`Log Perbaikan #${code}`}>
@@ -143,12 +143,24 @@ const AssetLogByAssetId = () => {
             {breadcrumbs}
           </Breadcrumbs>
 
-          <Box sx={{ overflow: "auto", width: { xs: "280px", sm: "auto" } }}>
+          <Box
+            sx={{
+              overflow: 'auto',
+              width: { xs: 'calc(100vw - 80px)', sm: 'auto' }
+            }}
+          >
             <Stack
-              direction="row"
               spacing={2}
               justifyContent="space-between"
               pt="5px"
+              sx={{
+                flexDirection: {
+                  xs: 'column',
+                  sm: 'column',
+                  md: 'column',
+                  lg: 'row'
+                }
+              }}
             >
               <Stack direction="row" spacing={2} alignItems="center">
                 <TextField
@@ -177,15 +189,24 @@ const AssetLogByAssetId = () => {
                 Tambah Data Perbaikan
               </Button>
             </Stack>
-            <Paper sx={{ width: "100%", overflow: "hidden" }}>
-              <TableContainer style={{ maxWidth: "calc(100vw - 420px)" }}>
+            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+              <TableContainer
+                sx={{
+                  maxWidth: {
+                    xs: '100%',
+                    sm: '100%',
+                    md: '100%',
+                    lg: 'calc(100vw - 420px)'
+                  }
+                }}
+              >
                 {/* @ts-ignore */}
                 <Table
                   stickyHeader
                   aria-label="sticky table"
                   sx={{
-                    whiteSpace: "nowrap",
-                    mt: 2,
+                    whiteSpace: 'nowrap',
+                    mt: 2
                   }}
                   ref={componentPdf}
                 >
@@ -196,11 +217,21 @@ const AssetLogByAssetId = () => {
                           No
                         </Typography>
                       </TableCell>
-                      <StyledTableCellLeft>
+                      <TableCell
+                        sx={{
+                          position: { xs: 'static', md: 'sticky' },
+                          left: 0,
+                          backgroundColor: {
+                            xs: 'transparent',
+                            md: 'white'
+                          },
+                          zIndex: 5
+                        }}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
                           Kode aset
                         </Typography>
-                      </StyledTableCellLeft>
+                      </TableCell>
                       <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
                           Merk
@@ -286,11 +317,21 @@ const AssetLogByAssetId = () => {
                           Dibuat oleh
                         </Typography>
                       </TableCell>
-                      <StyledTableCell>
+                      <TableCell
+                        sx={{
+                          position: { xs: 'static', md: 'sticky' },
+                          right: 0,
+                          backgroundColor: {
+                            xs: 'transparent',
+                            md: 'white'
+                          },
+                          zIndex: 5
+                        }}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
                           Persetujuan
                         </Typography>
-                      </StyledTableCell>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -303,7 +344,7 @@ const AssetLogByAssetId = () => {
                       );
                       const actualRepairDay = actualRepairFinish.diff(
                         actualRepairStart,
-                        "days"
+                        'days'
                       );
 
                       return (
@@ -311,30 +352,40 @@ const AssetLogByAssetId = () => {
                           <TableCell>
                             <Typography
                               sx={{
-                                fontSize: "15px",
-                                fontWeight: "500",
+                                fontSize: '15px',
+                                fontWeight: '500'
                               }}
                             >
                               {index + 1}
                             </Typography>
                           </TableCell>
-                          <StyledTableCellLeft>
+                          <TableCell
+                            sx={{
+                              position: { xs: 'static', md: 'sticky' },
+                              left: 0,
+                              backgroundColor: {
+                                xs: 'transparent',
+                                md: 'white'
+                              },
+                              zIndex: 5
+                            }}
+                          >
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
                                 #{asset?.asset?.asset_code}
                               </Typography>
                             </Box>
-                          </StyledTableCellLeft>
+                          </TableCell>
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
@@ -345,8 +396,8 @@ const AssetLogByAssetId = () => {
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
@@ -357,46 +408,46 @@ const AssetLogByAssetId = () => {
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
                                 {moment(
                                   new Date(asset?.repair_time_plan_date)
-                                ).format("DD/MM/YYYY")}
+                                ).format('DD/MM/YYYY')}
                               </Typography>
                             </Box>
                           </TableCell>
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
-                                {actualRepairStart.format("DD/MM/YYYY")}
+                                {actualRepairStart.format('DD/MM/YYYY')}
                               </Typography>
                             </Box>
                           </TableCell>
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
-                                {actualRepairFinish.format("DD/MM/YYYY")}
+                                {actualRepairFinish.format('DD/MM/YYYY')}
                               </Typography>
                             </Box>
                           </TableCell>
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
@@ -407,8 +458,8 @@ const AssetLogByAssetId = () => {
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
@@ -419,13 +470,13 @@ const AssetLogByAssetId = () => {
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
                                 {moment(new Date(asset?.report_date)).format(
-                                  "DD/MM/YYYY"
+                                  'DD/MM/YYYY'
                                 )}
                               </Typography>
                             </Box>
@@ -433,8 +484,8 @@ const AssetLogByAssetId = () => {
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
@@ -445,8 +496,8 @@ const AssetLogByAssetId = () => {
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
@@ -457,22 +508,22 @@ const AssetLogByAssetId = () => {
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
                                 {moment(
                                   new Date(asset?.validation_by_laboratory_date)
-                                ).format("DD/MM/YYYY")}
+                                ).format('DD/MM/YYYY')}
                               </Typography>
                             </Box>
                           </TableCell>
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
@@ -483,8 +534,8 @@ const AssetLogByAssetId = () => {
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
@@ -495,8 +546,8 @@ const AssetLogByAssetId = () => {
                           <TableCell>
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
@@ -507,18 +558,18 @@ const AssetLogByAssetId = () => {
                           <TableCell>
                             <Chip
                               sx={{
-                                px: "4px",
+                                px: '4px',
                                 backgroundColor:
-                                  asset?.status === "Setuju"
-                                    ? "success.main"
-                                    : "error.main",
-                                color: "#fff",
+                                  asset?.status === 'Setuju'
+                                    ? 'success.main'
+                                    : 'error.main',
+                                color: '#fff'
                               }}
                               size="small"
                               label={
                                 asset?.status
                                   ? asset?.status
-                                  : "Menunggu Persetujuan"
+                                  : 'Menunggu Persetujuan'
                               }
                             ></Chip>
                           </TableCell>
@@ -526,8 +577,8 @@ const AssetLogByAssetId = () => {
                             {asset?.additional_document && (
                               <Box
                                 sx={{
-                                  display: "flex",
-                                  alignItems: "center",
+                                  display: 'flex',
+                                  alignItems: 'center'
                                 }}
                               >
                                 <Button
@@ -549,8 +600,19 @@ const AssetLogByAssetId = () => {
                               {asset?.user?.name}
                             </Typography>
                           </TableCell>
-                          <StyledTableCell>
-                            {user?.role === "admin-1" || user?.role === "admin-2" ? (
+                          <TableCell
+                            sx={{
+                              position: { xs: 'static', md: 'sticky' },
+                              right: 0,
+                              backgroundColor: {
+                                xs: 'transparent',
+                                md: 'white'
+                              },
+                              zIndex: 5
+                            }}
+                          >
+                            {user?.role === 'admin-1' ||
+                            user?.role === 'admin-2' ? (
                               <>
                                 {asset?.approved_user?.name ? (
                                   <>
@@ -579,7 +641,7 @@ const AssetLogByAssetId = () => {
                                 </Typography>
                               </>
                             )}
-                          </StyledTableCell>
+                          </TableCell>
                         </TableRow>
                       );
                     })}
@@ -589,7 +651,7 @@ const AssetLogByAssetId = () => {
             </Paper>
           </Box>
           <Box display="flex" justifyContent="space-between">
-            <FormControl style={{ minWidth: "100px" }}>
+            <FormControl style={{ minWidth: '100px' }}>
               <InputLabel id="show-label">Show</InputLabel>
               <Select
                 labelId="show-label"
@@ -599,7 +661,7 @@ const AssetLogByAssetId = () => {
                 onChange={(event) => {
                   const value = event?.target?.value;
                   setShow(event?.target?.value);
-                  fetchAsset("1", value, filtersData);
+                  fetchAsset('1', value, filtersData);
                 }}
               >
                 <MenuItem value="5">5</MenuItem>

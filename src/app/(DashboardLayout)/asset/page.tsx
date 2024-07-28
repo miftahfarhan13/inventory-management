@@ -156,12 +156,24 @@ const Asset = () => {
       </style>
       <DashboardCard title=" Data Aset">
         <Stack direction="column" spacing={2}>
-          <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
+          <Box
+            sx={{
+              overflow: 'auto',
+              width: { xs: 'calc(100vw - 80px)', sm: 'auto' }
+            }}
+          >
             <Stack
-              direction="row"
               spacing={2}
               justifyContent="space-between"
               pt="5px"
+              sx={{
+                flexDirection: {
+                  xs: 'column',
+                  sm: 'column',
+                  md: 'column',
+                  lg: 'row'
+                }
+              }}
             >
               <Stack direction="row" spacing={2} alignItems="center">
                 <TextField
@@ -196,7 +208,16 @@ const Asset = () => {
             ) : (
               <>
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                  <TableContainer style={{ maxWidth: 'calc(100vw - 420px)' }}>
+                  <TableContainer
+                    sx={{
+                      maxWidth: {
+                        xs: '100%',
+                        sm: '100%',
+                        md: '100%',
+                        lg: 'calc(100vw - 420px)'
+                      }
+                    }}
+                  >
                     {/* @ts-ignore */}
                     <Table
                       stickyHeader
@@ -289,11 +310,21 @@ const Asset = () => {
                               Dibuat Oleh &nbsp; <IconArrowsSort size="15" />
                             </Typography>
                           </TableCell>
-                          <StyledTableCell>
+                          <TableCell
+                            sx={{
+                              position: { xs: 'static', md: 'sticky' },
+                              right: 0,
+                              backgroundColor: {
+                                xs: 'transparent',
+                                md: 'white'
+                              },
+                              zIndex: 5
+                            }}
+                          >
                             <Typography variant="subtitle2" fontWeight={600}>
                               Aksi
                             </Typography>
-                          </StyledTableCell>
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -468,7 +499,17 @@ const Asset = () => {
                                   {asset?.created_by}
                                 </Typography>
                               </TableCell>
-                              <StyledTableCell>
+                              <TableCell
+                                sx={{
+                                  position: { xs: 'static', md: 'sticky' },
+                                  right: 0,
+                                  backgroundColor: {
+                                    xs: 'transparent',
+                                    md: 'white'
+                                  },
+                                  zIndex: 5
+                                }}
+                              >
                                 <Stack
                                   spacing={1}
                                   direction="row"
@@ -509,7 +550,7 @@ const Asset = () => {
                           onSuccess={() => fetchAsset("1", show)}
                         /> */}
                                 </Stack>
-                              </StyledTableCell>
+                              </TableCell>
                             </TableRow>
                           );
                         })}

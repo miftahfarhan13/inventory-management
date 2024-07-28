@@ -1,33 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
-import * as imageConversion from "image-conversion";
-import { fetchImageFile } from "@/networks/libs/file";
-import { ISnackbar } from "@/utils/interface/snackbar";
-import {
-  Box,
-  Button,
-  Stack,
-  Typography,
-  styled,
-} from "@mui/material";
-import { IconCloudUpload, IconX } from "@tabler/icons-react";
-import SnackbarAlert from "@/app/(DashboardLayout)/components/shared/SnackbarAlert";
-import { truncate } from "@/utils/string";
+import React, { useEffect, useRef, useState } from 'react';
+import { fetchImageFile } from '@/networks/libs/file';
+import { ISnackbar } from '@/utils/interface/snackbar';
+import { Box, Button, Stack, Typography, styled } from '@mui/material';
+import { IconCloudUpload, IconX } from '@tabler/icons-react';
+import SnackbarAlert from '@/app/(DashboardLayout)/components/shared/SnackbarAlert';
+import { truncate } from '@/utils/string';
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
   height: 1,
-  overflow: "hidden",
-  position: "absolute",
+  overflow: 'hidden',
+  position: 'absolute',
   bottom: 0,
   left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
+  whiteSpace: 'nowrap',
+  width: 1
 });
 
 function UploadFile({
   url,
-  onChangeValue,
+  onChangeValue
 }: {
   url: string;
   onChangeValue: (value: string) => void;
@@ -37,8 +30,8 @@ function UploadFile({
   const [isLoading, setIsLoading] = useState(false);
   const [snackbar, setSnackbar] = useState<ISnackbar>({
     isOpen: false,
-    message: "",
-    severity: "info",
+    message: '',
+    severity: 'info'
   });
 
   useEffect(() => {
@@ -51,22 +44,21 @@ function UploadFile({
     setIsLoading(true);
     // @ts-ignore
     const file = fileUpload.current.files[0];
-    const convert = await imageConversion.compressAccurately(file, 500);
-    const new_file = new File([convert], file.name, { type: convert.type });
-    onUploadFile(new_file);
+
+    onUploadFile(file);
   };
 
   const onUploadFile = async (file: any) => {
     const form = new FormData();
-    form.append("file", file);
+    form.append('file', file);
 
-    await fetchImageFile(localStorage.getItem("token") || "", form)
+    await fetchImageFile(localStorage.getItem('token') || '', form)
       .then((response) => {
         setIsLoading(false);
         setSnackbar({
           isOpen: true,
-          message: "Berhasil mengupload file!",
-          severity: "success",
+          message: 'Berhasil mengupload file!',
+          severity: 'success'
         });
 
         setFileToUpload(response.data.result);
@@ -81,7 +73,7 @@ function UploadFile({
         setSnackbar({
           isOpen: true,
           message: message,
-          severity: "error",
+          severity: 'error'
         });
       });
   };
@@ -96,7 +88,7 @@ function UploadFile({
           setSnackbar((prev) => {
             return {
               ...prev,
-              isOpen: false,
+              isOpen: false
             };
           })
         }
@@ -122,14 +114,14 @@ function UploadFile({
                 {fileToUpload && (
                   <Box
                     bgcolor="white"
-                    sx={{ boxShadow: "2", cursor: "pointer" }}
+                    sx={{ boxShadow: '2', cursor: 'pointer' }}
                     width={20}
                     height={20}
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
                     borderRadius="100%"
-                    onClick={() => setFileToUpload("")}
+                    onClick={() => setFileToUpload('')}
                   >
                     <IconX size={14} />
                   </Box>

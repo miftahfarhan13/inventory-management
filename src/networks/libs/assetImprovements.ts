@@ -55,6 +55,16 @@ export function fetchCreateAssetImprovement(token: string, data: any) {
   return axiosClient.post(`/asset-improvements/create`, data, config);
 }
 
+export function fetchCreateBulkAssetImprovement(token: string, data: any) {
+  let config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return axiosClient.post(`/asset-improvements/create-bulk`, data, config);
+}
+
 export function fetchUpdateAssetImprovementApproval(
   token: string,
   data: any,

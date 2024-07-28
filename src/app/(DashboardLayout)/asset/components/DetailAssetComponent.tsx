@@ -1,7 +1,6 @@
 'use client';
 import {
   Box,
-  Breadcrumbs,
   Button,
   Chip,
   Stack,
@@ -12,13 +11,9 @@ import {
   TableRow,
   Typography
 } from '@mui/material';
-import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
-import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
-import { useEffect, useRef, useState } from 'react';
-import { getAsset } from '@/networks/libs/asset';
-import { IconChevronRight, IconDownload, IconEdit } from '@tabler/icons-react';
+import { useRef } from 'react';
+import { IconDownload, IconEdit } from '@tabler/icons-react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import moment from 'moment';
 import { formatter } from '@/utils/number';
 import { useReactToPrint } from 'react-to-print';
@@ -266,12 +261,18 @@ export default function DetailAssetComponent({ asset }: { asset: any }) {
           </Stack>
 
           <Stack direction="column" alignItems="center" flexGrow={1}>
-            <Box border="2px solid grey" padding="16px" borderRadius="10px">
+            <Box
+              border="2px solid grey"
+              padding="16px"
+              borderRadius="10px"
+              sx={{
+                width: { xs: '100%', md: '400px' },
+                height: { xs: '300px', md: '300px' }
+              }}
+            >
               <img
                 src={asset?.image_url || '/images/default-image.jpeg'}
-                width={400}
-                height={300}
-                style={{ objectFit: 'contain' }}
+                style={{ objectFit: 'contain', width: '100%', height: '100%' }}
               />
             </Box>
           </Stack>
