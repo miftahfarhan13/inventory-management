@@ -64,7 +64,9 @@ const Asset = () => {
         0
       );
 
-      const lastRepair = assetImprovements[0]?.actual_repair_end_date;
+      const lastRepairEnd = assetImprovements[0]?.actual_repair_end_date;
+      const lastRepairStart = assetImprovements[0]?.actual_repair_start_date;
+      const lastRepair = lastRepairEnd ? lastRepairEnd : lastRepairStart;
 
       finalData.push({
         id: asset?.id,
@@ -79,6 +81,7 @@ const Asset = () => {
         last_repair: lastRepair
           ? moment(new Date(lastRepair)).format('DD/MM/YYYY')
           : '-',
+        asset_improvements: assetImprovements,
         created_by: asset?.user?.name
       });
     });

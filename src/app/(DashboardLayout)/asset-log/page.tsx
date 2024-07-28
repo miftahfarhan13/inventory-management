@@ -30,6 +30,11 @@ import { getAssetImprovements } from '@/networks/libs/assetImprovements';
 import { styled } from '@mui/system';
 import { useReactToPrint } from 'react-to-print';
 import FilterAssetLog from './[id]/components/FilterAssetLog';
+import useGetMe from '@/utils/hooks/useGetMe';
+import ModalApprove from './[id]/components/ModalApprove';
+import HoverPopover from './[id]/components/HoverPopover';
+import { IconEye } from '@tabler/icons-react';
+import FormUpdateDate from './[id]/components/FormUpdateDate';
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   position: 'sticky',
@@ -38,18 +43,13 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   zIndex: 5
 }));
 
-const StyledTableCellLeft = styled(TableCell)(({ theme }) => ({
-  position: 'sticky',
-  left: 0,
-  backgroundColor: theme.palette.background.paper,
-  zIndex: 5
-}));
-
 const AssetLogByAssetId = () => {
+  const { user } = useGetMe();
   const componentPdf = useRef();
 
   const firstRun = useRef(true);
 
+  const [page, setPage] = useState('1');
   const [filtersData, setFiltersData] = useState<any>();
   const [show, setShow] = useState('10');
   const [keyword, setKeyword] = useState('');
@@ -70,7 +70,7 @@ const AssetLogByAssetId = () => {
 
   useEffect(() => {
     if (firstRun.current) {
-      fetchAsset('1', show, filtersData);
+      fetchAsset(page, show, filtersData);
       firstRun.current = false;
     }
   }, []);
@@ -89,11 +89,28 @@ const AssetLogByAssetId = () => {
     fetchAsset('1', show, value);
   };
 
+  const refreshData = () => {
+    fetchAsset(page, show, filtersData);
+  };
+
   const generatePDF = useReactToPrint({
     // @ts-ignore
     content: () => componentPdf.current,
     documentTitle: 'Asset Data Perbaikan'
   });
+
+  const getAssetStatus = (status: string) => {
+    const assetStatus: any = {
+      Setuju: 'Disetujui',
+      Tolak: 'Revisi'
+    };
+
+    const currentStatus = assetStatus[status]
+      ? assetStatus[status]
+      : 'Menunggu Persetujuan';
+
+    return currentStatus;
+  };
 
   return (
     <PageContainer
@@ -184,6 +201,11 @@ const AssetLogByAssetId = () => {
                       </TableCell>
                       <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
+                          Uid aset
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight={600}>
                           Merk
                         </Typography>
                       </TableCell>
@@ -194,32 +216,22 @@ const AssetLogByAssetId = () => {
                       </TableCell>
                       <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Rencana Waktu Perbaikan Selesai
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="subtitle2" fontWeight={600}>
-                          Realisasi Waktu Perbaikan
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="subtitle2" fontWeight={600}>
-                          Realisasi Selesai
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="subtitle2" fontWeight={600}>
-                          Durasi Perbaikan
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="subtitle2" fontWeight={600}>
-                          Deskripsi
+                          Waktu Aset Dibutuhkan
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
                           Tanggal Pelaporan
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          Urgensi
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          Deskripsi
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -252,6 +264,28 @@ const AssetLogByAssetId = () => {
                           Biaya Perbaikan
                         </Typography>
                       </TableCell>
+
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          Target Waktu Perbaikan
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          Realisasi Waktu Perbaikan
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          Realisasi Selesai
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          Durasi Perbaikan
+                        </Typography>
+                      </TableCell>
+
                       <TableCell>
                         <Typography variant="subtitle2" fontWeight={600}>
                           Status Persetujuan
@@ -329,6 +363,18 @@ const AssetLogByAssetId = () => {
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
+                                #{asset?.asset?.asset_uid}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <Typography variant="subtitle2" fontWeight={600}>
                                 {asset?.asset?.brand}
                               </Typography>
                             </Box>
@@ -354,56 +400,8 @@ const AssetLogByAssetId = () => {
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
                                 {moment(
-                                  new Date(asset?.repair_time_plan_date)
+                                  new Date(asset?.asset_needed_date)
                                 ).format('DD/MM/YYYY')}
-                              </Typography>
-                            </Box>
-                          </TableCell>
-                          <TableCell>
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                alignItems: 'center'
-                              }}
-                            >
-                              <Typography variant="subtitle2" fontWeight={600}>
-                                {actualRepairStart.format('DD/MM/YYYY')}
-                              </Typography>
-                            </Box>
-                          </TableCell>
-                          <TableCell>
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                alignItems: 'center'
-                              }}
-                            >
-                              <Typography variant="subtitle2" fontWeight={600}>
-                                {actualRepairFinish.format('DD/MM/YYYY')}
-                              </Typography>
-                            </Box>
-                          </TableCell>
-                          <TableCell>
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                alignItems: 'center'
-                              }}
-                            >
-                              <Typography variant="subtitle2" fontWeight={600}>
-                                {actualRepairDay} Hari
-                              </Typography>
-                            </Box>
-                          </TableCell>
-                          <TableCell>
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                alignItems: 'center'
-                              }}
-                            >
-                              <Typography variant="subtitle2" fontWeight={600}>
-                                {asset?.description}
                               </Typography>
                             </Box>
                           </TableCell>
@@ -418,6 +416,30 @@ const AssetLogByAssetId = () => {
                                 {moment(new Date(asset?.report_date)).format(
                                   'DD/MM/YYYY'
                                 )}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                {asset?.urgency ? asset?.urgency : '-'}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                {asset?.description ? asset?.description : '-'}
                               </Typography>
                             </Box>
                           </TableCell>
@@ -495,23 +517,135 @@ const AssetLogByAssetId = () => {
                               </Typography>
                             </Box>
                           </TableCell>
+
                           <TableCell>
-                            <Chip
+                            <Box
                               sx={{
-                                px: '4px',
-                                backgroundColor:
-                                  asset?.status === 'Setuju'
-                                    ? 'success.main'
-                                    : 'error.main',
-                                color: '#fff'
+                                display: 'flex',
+                                alignItems: 'center'
                               }}
-                              size="small"
-                              label={
-                                asset?.status
-                                  ? asset?.status
-                                  : 'Menunggu Persetujuan'
-                              }
-                            ></Chip>
+                            >
+                              {asset?.target_repair_date ? (
+                                <>
+                                  <Typography
+                                    variant="subtitle2"
+                                    fontWeight={600}
+                                  >
+                                    {moment(
+                                      new Date(asset?.target_repair_date)
+                                    ).format('DD/MM/YYYY')}
+                                  </Typography>
+                                </>
+                              ) : (
+                                <>
+                                  <FormUpdateDate
+                                    assetId={asset?.asset?.id}
+                                    id={asset?.id}
+                                    name="target_repair_date"
+                                    onSuccess={() => refreshData()}
+                                  />
+                                </>
+                              )}
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              {asset?.actual_repair_start_date ? (
+                                <>
+                                  <Typography
+                                    variant="subtitle2"
+                                    fontWeight={600}
+                                  >
+                                    {actualRepairStart.format('DD/MM/YYYY')}
+                                  </Typography>
+                                </>
+                              ) : (
+                                <>
+                                  <FormUpdateDate
+                                    assetId={asset?.asset?.id}
+                                    id={asset?.id}
+                                    name="actual_repair_start_date"
+                                    onSuccess={() => refreshData()}
+                                  />
+                                </>
+                              )}
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              {asset?.actual_repair_end_date ? (
+                                <>
+                                  <Typography
+                                    variant="subtitle2"
+                                    fontWeight={600}
+                                  >
+                                    {actualRepairFinish.format('DD/MM/YYYY')}
+                                  </Typography>
+                                </>
+                              ) : (
+                                <>
+                                  <FormUpdateDate
+                                    assetId={asset?.asset?.id}
+                                    id={asset?.id}
+                                    name="actual_repair_end_date"
+                                    onSuccess={() => refreshData()}
+                                  />
+                                </>
+                              )}
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                {asset?.actual_repair_end_date &&
+                                asset?.actual_repair_start_date
+                                  ? `${actualRepairDay} Hari`
+                                  : '-'}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+
+                          <TableCell>
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={1}
+                            >
+                              <Chip
+                                sx={{
+                                  px: '4px',
+                                  backgroundColor:
+                                    asset?.status === 'Setuju'
+                                      ? 'success.main'
+                                      : 'error.main',
+                                  color: '#fff'
+                                }}
+                                size="small"
+                                label={getAssetStatus(asset?.status)}
+                              ></Chip>
+                              {asset?.revision && (
+                                <HoverPopover
+                                  text={`Revisi: ${asset?.revision}`}
+                                >
+                                  <IconEye width="20" height="20" />
+                                </HoverPopover>
+                              )}
+                            </Stack>
                           </TableCell>
                           <TableCell>
                             {asset?.additional_document && (
@@ -541,15 +675,36 @@ const AssetLogByAssetId = () => {
                             </Typography>
                           </TableCell>
                           <TableCell>
-                            <Typography
-                              color="textSecondary"
-                              variant="subtitle2"
-                              fontWeight={400}
-                            >
-                              {asset?.approved_user?.name
-                                ? asset?.approved_user?.name
-                                : '-'}
-                            </Typography>
+                            {user?.role === 'admin-1' ||
+                            user?.role === 'admin-2' ? (
+                              <>
+                                {asset?.approved_user?.name ? (
+                                  <>
+                                    <Typography
+                                      color="textSecondary"
+                                      variant="subtitle2"
+                                      fontWeight={400}
+                                    >
+                                      {asset?.approved_user?.name}
+                                    </Typography>
+                                  </>
+                                ) : (
+                                  <>
+                                    <ModalApprove id={asset?.id} />
+                                  </>
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                <Typography
+                                  color="textSecondary"
+                                  variant="subtitle2"
+                                  fontWeight={400}
+                                >
+                                  {asset?.approved_user?.name}
+                                </Typography>
+                              </>
+                            )}
                           </TableCell>
                         </TableRow>
                       );
@@ -580,9 +735,10 @@ const AssetLogByAssetId = () => {
             </FormControl>
 
             <Pagination
-              onChange={(_, page) =>
-                fetchAsset(page.toString(), show, filtersData)
-              }
+              onChange={(_, page) => {
+                setPage(page.toString());
+                fetchAsset(page.toString(), show, filtersData);
+              }}
               count={asset?.last_page}
             />
           </Box>

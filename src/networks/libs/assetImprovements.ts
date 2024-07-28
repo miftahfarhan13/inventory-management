@@ -78,3 +78,17 @@ export function fetchUpdateAssetImprovementApproval(
 
   return axiosClient.post(`/asset-improvements/update-status/${id}`, data, config);
 }
+
+export function fetchUpdateAssetImprovementDates(
+  token: string,
+  data: any,
+  id: string
+) {
+  let config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return axiosClient.post(`/asset-improvements/update-dates/${id}`, data, config);
+}

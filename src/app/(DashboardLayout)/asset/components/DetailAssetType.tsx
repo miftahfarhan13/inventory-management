@@ -7,13 +7,13 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
-} from "@mui/material";
-import { IconEye } from "@tabler/icons-react";
-import React from "react";
+  TableRow
+} from '@mui/material';
+import { IconEye } from '@tabler/icons-react';
+import React from 'react';
 
 export default function DetailAssetType({
-  assetImprovements,
+  assetImprovements
 }: {
   assetImprovements: any;
 }) {
@@ -30,8 +30,7 @@ export default function DetailAssetType({
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
-
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <div>
@@ -49,8 +48,8 @@ export default function DetailAssetType({
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
+          vertical: 'bottom',
+          horizontal: 'left'
         }}
       >
         <Table aria-label="simple table">
@@ -65,7 +64,7 @@ export default function DetailAssetType({
             {assetImprovements?.map((improve: any, index: number) => (
               <TableRow
                 key={index + 1}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
                   {index + 1}
@@ -73,19 +72,21 @@ export default function DetailAssetType({
                 <TableCell align="right">
                   <Chip
                     sx={{
-                      px: "4px",
+                      px: '4px',
                       backgroundColor:
-                        improve?.type === "Baik"
-                          ? "success.main"
-                          : "error.main",
-                      color: "#fff",
+                        improve?.type === 'Baik'
+                          ? 'success.main'
+                          : 'error.main',
+                      color: '#fff'
                     }}
                     size="small"
                     label={improve?.type}
                   ></Chip>
                 </TableCell>
                 <TableCell align="right">
-                  {improve?.actual_repair_end_date}
+                  {improve?.actual_repair_end_date
+                    ? improve?.actual_repair_end_date
+                    : improve?.actual_repair_start_date}
                 </TableCell>
               </TableRow>
             ))}

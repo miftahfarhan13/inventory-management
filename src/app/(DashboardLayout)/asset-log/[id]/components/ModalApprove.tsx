@@ -1,29 +1,54 @@
-import SnackbarAlert from "@/app/(DashboardLayout)/components/shared/SnackbarAlert";
-import { fetchUpdateAssetImprovementApproval } from "@/networks/libs/assetImprovements";
-import { showAlertConfirmation } from "@/utils/function";
-import { ISnackbar } from "@/utils/interface/snackbar";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import SnackbarAlert from '@/app/(DashboardLayout)/components/shared/SnackbarAlert';
+import { fetchUpdateAssetImprovementApproval } from '@/networks/libs/assetImprovements';
+import { showAlertConfirmation } from '@/utils/function';
+import { ISnackbar } from '@/utils/interface/snackbar';
+import { LoadingButton } from '@mui/lab';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextareaAutosize
+} from '@mui/material';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 export default function ModalApprove({ id }: { id: number }) {
   const router = useRouter();
-  const [approve, setApprove] = useState("");
+  const [approve, setApprove] = useState('');
+  const [revision, setRevision] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
   const [snackbar, setSnackbar] = useState<ISnackbar>({
     isOpen: false,
-    message: "",
-    severity: "info",
+    message: '',
+    severity: 'info'
   });
 
-  const onUpdateStatus = async (status: string) => {
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const onUpdateStatus = async () => {
     setIsLoading(true);
-    const token = localStorage.getItem("token") || "";
+    const token = localStorage.getItem('token') || '';
     await fetchUpdateAssetImprovementApproval(
       token,
       {
-        status,
+        status: approve,
+        revision
       },
       id.toString()
     )
@@ -31,8 +56,8 @@ export default function ModalApprove({ id }: { id: number }) {
         setIsLoading(false);
         setSnackbar({
           isOpen: true,
-          message: "Berhasil mengubah Status Persetujuan Aset!",
-          severity: "success",
+          message: 'Berhasil mengubah Status Persetujuan Aset!',
+          severity: 'success'
         });
         router.refresh();
       })
@@ -44,20 +69,19 @@ export default function ModalApprove({ id }: { id: number }) {
         setSnackbar({
           isOpen: true,
           message: message,
-          severity: "error",
+          severity: 'error'
         });
       });
   };
 
-  const handleChangeApprove = (value: string) => {
+  const handleChangeApprove = () => {
     showAlertConfirmation(
-      "Apakah anda yakin ingin mengubah status persetujuan?",
+      'Apakah anda yakin ingin mengubah status persetujuan?',
       (confirmed: any) => {
         if (confirmed) {
-          setApprove(value);
-          onUpdateStatus(value);
+          onUpdateStatus();
         } else {
-          console.log("Canceled");
+          console.log('Canceled');
         }
       }
     );
@@ -73,27 +97,85 @@ export default function ModalApprove({ id }: { id: number }) {
           setSnackbar((prev) => {
             return {
               ...prev,
-              isOpen: false,
+              isOpen: false
             };
           })
         }
       />
-      <FormControl style={{ minWidth: "130px" }}>
-        <InputLabel id="demo-simple-select-label" size="small">
-          Persetujuan
-        </InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={approve}
-          label="Persetujuan"
-          size="small"
-          onChange={(event) => handleChangeApprove(event.target.value)}
-        >
-          <MenuItem value="Setuju">Setuju</MenuItem>
-          <MenuItem value="Tolak">Tolak</MenuItem>
-        </Select>
-      </FormControl>
+      <Button variant="outlined" onClick={handleClickOpen}>
+        Persetujuan
+      </Button>
+
+      <Dialog
+        style={{ zIndex: 5 }}
+        fullWidth
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          component: 'form',
+          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            handleChangeApprove();
+            handleClose();
+          }
+        }}
+      >
+        <DialogTitle>Persetujuan</DialogTitle>
+        <DialogContent>
+          <Stack direction="column" spacing={2}>
+            <Stack direction="column" spacing={1}>
+              <DialogContentText>Pilih Persetujuan</DialogContentText>
+              <FormControl style={{ minWidth: '130px' }}>
+                <InputLabel id="demo-simple-select-label" size="small">
+                  Persetujuan
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={approve}
+                  label="Persetujuan"
+                  size="small"
+                  onChange={(event) => setApprove(event.target.value)}
+                >
+                  <MenuItem value="Setuju">Setuju</MenuItem>
+                  <MenuItem value="Tolak">Tolak</MenuItem>
+                </Select>
+              </FormControl>
+            </Stack>
+
+            <Stack direction="column" spacing={1}>
+              <DialogContentText>Revisi</DialogContentText>
+              <TextareaAutosize
+                disabled={!approve || approve === 'Setuju'}
+                autoFocus
+                required
+                id="revision"
+                name="revision"
+                placeholder="Revisi"
+                value={revision}
+                onChange={(event) => setRevision(event.target.value)}
+                minRows={3}
+                style={{
+                  boxSizing: 'border-box',
+                  width: '100%',
+                  fontFamily: "'IBM Plex Sans', sans-serif",
+                  fontSize: '0.875rem',
+                  fontWeight: '400',
+                  lineHeight: '1.5',
+                  padding: '8px 12px',
+                  borderRadius: '8px'
+                }}
+              />
+            </Stack>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <LoadingButton loading={isLoading} type="submit" variant="contained">
+            Simpan
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
