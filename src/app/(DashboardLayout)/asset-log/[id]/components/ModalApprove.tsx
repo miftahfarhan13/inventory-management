@@ -18,14 +18,30 @@ import {
   TextareaAutosize
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-export default function ModalApprove({ id }: { id: number }) {
+export default function ModalApprove({
+  id,
+  status,
+  assetRevision,
+  onSuccess
+}: {
+  id: number;
+  status: string;
+  assetRevision: string;
+  onSuccess: any;
+}) {
   const router = useRouter();
   const [approve, setApprove] = useState('');
   const [revision, setRevision] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
+
+  useEffect(() => {
+    const currentStatus = status !== 'Menunggu Persetujuan' ? status : '';
+    if (currentStatus) setApprove(currentStatus);
+    if (assetRevision) setRevision(assetRevision);
+  }, [status, assetRevision]);
 
   const [snackbar, setSnackbar] = useState<ISnackbar>({
     isOpen: false,
@@ -59,7 +75,7 @@ export default function ModalApprove({ id }: { id: number }) {
           message: 'Berhasil mengubah Status Persetujuan Aset!',
           severity: 'success'
         });
-        router.refresh();
+        onSuccess();
       })
       .catch((error) => {
         const message = error?.response?.data?.message

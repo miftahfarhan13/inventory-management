@@ -86,7 +86,7 @@ const Asset = () => {
       });
     });
 
-    setAsset(finalData);
+    setAsset({ data: finalData, last_page: data?.last_page });
   };
 
   const [isLoading, setIsLoading] = useState(false);
@@ -130,7 +130,7 @@ const Asset = () => {
     documentTitle: 'Asset Data'
   });
 
-  const sortedAssets = [...(asset || [])].sort((a, b) => {
+  const sortedAssets = [...(asset?.data || [])].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === 'asc' ? -1 : 1;
     }

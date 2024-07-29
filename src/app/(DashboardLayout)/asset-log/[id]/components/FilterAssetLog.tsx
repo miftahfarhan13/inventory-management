@@ -9,19 +9,20 @@ import {
   Select,
   Stack,
   TextField,
-  Typography,
-} from "@mui/material";
-import { IconChevronDown } from "@tabler/icons-react";
-import React, { useState } from "react";
-import moment from "moment";
-import DatePickerRange from "@/app/(DashboardLayout)/year-quarter/shared/DateRangePicker";
-import SelectCategory from "@/app/(DashboardLayout)/asset/create/components/shared/SelectCategory";
-import SelectLocation from "@/app/(DashboardLayout)/asset/create/components/shared/SelectLocation";
-import SelectStudyProgram from "@/app/(DashboardLayout)/location/shared/SelectStudyProgram";
-import { numberInputOnWheelPreventChange } from "@/utils/number";
+  Typography
+} from '@mui/material';
+import { IconChevronDown } from '@tabler/icons-react';
+import React, { useState } from 'react';
+import moment from 'moment';
+import DatePickerRange from '@/app/(DashboardLayout)/year-quarter/shared/DateRangePicker';
+import SelectCategory from '@/app/(DashboardLayout)/asset/create/components/shared/SelectCategory';
+import SelectLocation from '@/app/(DashboardLayout)/asset/create/components/shared/SelectLocation';
+import SelectStudyProgram from '@/app/(DashboardLayout)/location/shared/SelectStudyProgram';
+import { numberInputOnWheelPreventChange } from '@/utils/number';
+import SelectYear from '@/app/(DashboardLayout)/asset/create/components/shared/SelectYear';
 
 export default function FilterAssetLog({
-  onSaveFilter,
+  onSaveFilter
 }: {
   onSaveFilter: (value: any) => void;
 }) {
@@ -38,8 +39,9 @@ export default function FilterAssetLog({
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
+  const id = open ? 'simple-popover' : undefined;
 
+  const [selectedYear, setSelectedYear] = useState<any>(null);
   const [range, setRange] = React.useState<[Date, Date]>();
   const [categoryId, setCategoryId] = useState<number>();
   const [locationId, setLocationId] = useState<number>();
@@ -54,15 +56,23 @@ export default function FilterAssetLog({
   const [checkedTw1, setCheckedTw1] = React.useState(false);
   const [checkedTw2, setCheckedTw2] = React.useState(false);
   const [checkedTw3, setCheckedTw3] = React.useState(false);
+  const [checkedTw4, setCheckedTw4] = React.useState(false);
 
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+
+  const handleSetRange = (startDate: string, endDate: string) => {
+    if (selectedYear) {
+      setRange([new Date(startDate), new Date(endDate)]);
+    }
+  };
 
   const handleChangeRange = (value: any) => {
     setRange(value);
     setCheckedTw1(false);
     setCheckedTw2(false);
     setCheckedTw3(false);
+    setCheckedTw4(false);
   };
 
   const handleChangeTw1 = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +80,11 @@ export default function FilterAssetLog({
     setCheckedTw1(event.target.checked);
     setCheckedTw2(false);
     setCheckedTw3(false);
+    setCheckedTw4(false);
+
+    const startDate = selectedYear?.start_tw_1;
+    const endDate = selectedYear?.end_tw_1;
+    handleSetRange(startDate, endDate);
   };
 
   const handleChangeTw2 = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +92,11 @@ export default function FilterAssetLog({
     setCheckedTw1(false);
     setCheckedTw2(event.target.checked);
     setCheckedTw3(false);
+    setCheckedTw4(false);
+
+    const startDate = selectedYear?.start_tw_2;
+    const endDate = selectedYear?.end_tw_2;
+    handleSetRange(startDate, endDate);
   };
 
   const handleChangeTw3 = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +104,27 @@ export default function FilterAssetLog({
     setCheckedTw1(false);
     setCheckedTw2(false);
     setCheckedTw3(event.target.checked);
+    setCheckedTw4(false);
+
+    const startDate = selectedYear?.start_tw_3;
+    const endDate = selectedYear?.end_tw_3;
+    handleSetRange(startDate, endDate);
+  };
+
+  const handleChangeTw4 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRange(undefined);
+    setCheckedTw1(false);
+    setCheckedTw2(false);
+    setCheckedTw3(false);
+    setCheckedTw4(event.target.checked);
+
+    const startDate = selectedYear?.start_tw_4;
+    const endDate = selectedYear?.end_tw_4;
+    handleSetRange(startDate, endDate);
+  };
+
+  const handleChangeYear = (value: any) => {
+    setSelectedYear(value);
   };
 
   const handleChangeCategoryId = (value: any) => {
@@ -112,42 +153,45 @@ export default function FilterAssetLog({
     }
   };
 
-  const onSave = () => {
-    const dateRange = range ? range : [];
+  const getStatus = () => {
     let status = Array<any>();
     if (checkedAll) {
-      status = ["Menunggu Persetujuan", "Setuju", "Tolak"];
+      status = ['Menunggu Persetujuan', 'Setuju', 'Tolak'];
     } else {
       if (checkedWaiting) {
-        status.push("Menunggu Persetujuan");
+        status.push('Menunggu Persetujuan');
       }
 
       if (checkedSuccess) {
-        status.push("Setuju");
+        status.push('Setuju');
       }
 
       if (checkedFailed) {
-        status.push("Tolak");
+        status.push('Tolak');
       }
     }
 
+    return status;
+  };
+
+  const onSave = () => {
+    const dateRange = range ? range : [];
+    const status = getStatus();
+
     const filtersData = {
-      location_id: locationId ? locationId : "",
-      category_id: categoryId ? categoryId : "",
-      study_program_id: studyProgramId ? studyProgramId : "",
+      location_id: locationId ? locationId : '',
+      category_id: categoryId ? categoryId : '',
+      study_program_id: studyProgramId ? studyProgramId : '',
       status: status.length > 0 ? status : [],
-      is_tw_1: checkedTw1 ? checkedTw1 : "",
-      is_tw_2: checkedTw2 ? checkedTw2 : "",
-      is_tw_3: checkedTw3 ? checkedTw3 : "",
       start_date: dateRange[0]
-        ? moment(new Date(dateRange[0])).format("YYYY-MM-DD")
-        : "",
+        ? moment(new Date(dateRange[0])).format('YYYY-MM-DD')
+        : '',
       end_date: dateRange[1]
-        ? moment(new Date(dateRange[1])).format("YYYY-MM-DD")
-        : "",
-      type: type ? type : "",
-      price_start: minPrice ? minPrice : "",
-      price_end: maxPrice ? maxPrice : "",
+        ? moment(new Date(dateRange[1])).format('YYYY-MM-DD')
+        : '',
+      type: type ? type : '',
+      price_start: minPrice ? minPrice : '',
+      price_end: maxPrice ? maxPrice : ''
     };
 
     onSaveFilter(filtersData);
@@ -171,8 +215,8 @@ export default function FilterAssetLog({
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
+          vertical: 'bottom',
+          horizontal: 'left'
         }}
       >
         <Box p="20px">
@@ -196,6 +240,15 @@ export default function FilterAssetLog({
                     placeholder="Rentang Waktu"
                   />
 
+                  <Typography fontWeight="600">Tahun</Typography>
+
+                  <SelectYear
+                    value={selectedYear}
+                    onChange={(event: any) =>
+                      handleChangeYear(event.target.value)
+                    }
+                  />
+
                   <Stack direction="row" spacing={2}>
                     <Stack direction="row" alignItems="center" spacing={0.5}>
                       <Checkbox
@@ -204,6 +257,9 @@ export default function FilterAssetLog({
                         aria-label="Checkbox TW 1"
                         size="small"
                         style={{ padding: 0 }}
+                        disabled={
+                          !selectedYear?.start_tw_1 && !selectedYear?.end_tw_1
+                        }
                       />
                       <Typography fontWeight="400">TW 1</Typography>
                     </Stack>
@@ -215,6 +271,9 @@ export default function FilterAssetLog({
                         aria-label="Checkbox TW 2"
                         size="small"
                         style={{ padding: 0 }}
+                        disabled={
+                          !selectedYear?.start_tw_2 && !selectedYear?.end_tw_2
+                        }
                       />
                       <Typography fontWeight="400">TW 2</Typography>
                     </Stack>
@@ -226,8 +285,25 @@ export default function FilterAssetLog({
                         aria-label="TW 3"
                         size="small"
                         style={{ padding: 0 }}
+                        disabled={
+                          !selectedYear?.start_tw_3 && !selectedYear?.end_tw_3
+                        }
                       />
                       <Typography fontWeight="400">TW 3</Typography>
+                    </Stack>
+
+                    <Stack direction="row" alignItems="center" spacing={0.5}>
+                      <Checkbox
+                        checked={checkedTw4}
+                        onChange={handleChangeTw4}
+                        aria-label="TW 4"
+                        size="small"
+                        style={{ padding: 0 }}
+                        disabled={
+                          !selectedYear?.start_tw_4 && !selectedYear?.end_tw_4
+                        }
+                      />
+                      <Typography fontWeight="400">TW 4</Typography>
                     </Stack>
                   </Stack>
                 </Stack>
@@ -327,7 +403,7 @@ export default function FilterAssetLog({
                         placeholder="Min Biaya Perbaikan"
                         required
                         InputProps={{
-                          startAdornment: <Typography mr={1}>Rp</Typography>,
+                          startAdornment: <Typography mr={1}>Rp</Typography>
                         }}
                         onWheel={numberInputOnWheelPreventChange}
                         value={minPrice}
@@ -339,7 +415,7 @@ export default function FilterAssetLog({
                         placeholder="Max Biaya Perbaikan"
                         required
                         InputProps={{
-                          startAdornment: <Typography mr={1}>Rp</Typography>,
+                          startAdornment: <Typography mr={1}>Rp</Typography>
                         }}
                         onWheel={numberInputOnWheelPreventChange}
                         value={maxPrice}

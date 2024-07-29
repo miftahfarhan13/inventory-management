@@ -23,7 +23,7 @@ import PageContainer from '@/app/(DashboardLayout)/components/container/PageCont
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import { useEffect, useRef, useState } from 'react';
 import useDebounce from '@/utils/hooks/useDebounce';
-import { IconDownload } from '@tabler/icons-react';
+import { IconArrowsSort, IconDownload } from '@tabler/icons-react';
 import { formatter } from '@/utils/number';
 import moment from 'moment';
 import { getAssetImprovements } from '@/networks/libs/assetImprovements';
@@ -35,6 +35,7 @@ import ModalApprove from './[id]/components/ModalApprove';
 import HoverPopover from './[id]/components/HoverPopover';
 import { IconEye } from '@tabler/icons-react';
 import FormUpdateDate from './[id]/components/FormUpdateDate';
+import ModalUpdateAssetLog from './[id]/create/components/shared/ModalUpdateAssetLog';
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   position: 'sticky',
@@ -51,16 +52,77 @@ const AssetLogByAssetId = () => {
 
   const [page, setPage] = useState('1');
   const [filtersData, setFiltersData] = useState<any>();
+  const [sortConfig, setSortConfig] = useState({
+    key: 'name',
+    direction: 'asc'
+  });
   const [show, setShow] = useState('10');
   const [keyword, setKeyword] = useState('');
   const [asset, setAsset] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleSetAssets = (data: any) => {
+    let finalData = Array<any>();
+
+    data?.data?.map((asset: any, index: number) => {
+      const actualRepairFinish = moment(
+        new Date(asset?.actual_repair_end_date)
+      );
+      const actualRepairStart = moment(
+        new Date(asset?.actual_repair_start_date)
+      );
+      const actualRepairDay = actualRepairFinish.diff(
+        actualRepairStart,
+        'days'
+      );
+
+      finalData.push({
+        id: asset?.id,
+        asset_id: asset?.asset?.id,
+        no: index + 1,
+        asset_code: asset?.asset?.asset_code,
+        asset_uid: asset?.asset?.asset_uid,
+        brand: asset?.asset?.brand,
+        name: asset?.asset?.name,
+        asset_needed_date: asset?.asset_needed_date,
+        report_date: asset?.report_date,
+        urgency: asset?.urgency,
+        description: asset?.description,
+        reporter: asset?.reporter,
+        contact_reporter: asset?.contact_reporter,
+        validation_by_laboratory_date: asset?.validation_by_laboratory_date,
+        type: asset?.type,
+        technician_name: asset?.technician_name,
+        improvement_price: formatter.format(asset?.improvement_price),
+        target_repair_date: asset?.target_repair_date
+          ? asset?.target_repair_date
+          : '',
+
+        actual_repair_start_date: asset?.actual_repair_start_date
+          ? actualRepairStart.format('YYYY-MM-DD')
+          : '',
+
+        actual_repair_end_date: asset?.actual_repair_end_date
+          ? actualRepairFinish.format('YYYY-MM-DD')
+          : '',
+        actual_repair_day: actualRepairDay,
+        status: asset?.status,
+        revision: asset?.revision,
+        additional_document: asset?.additional_document,
+        user_name: asset?.user?.name,
+        approved_user_name: asset?.approved_user?.name
+      });
+    });
+
+    setAsset({ data: finalData, last_page: data?.last_page });
+  };
+
   const fetchAsset = (page: string, show: string, filters: any) => {
     const token = localStorage.getItem('token') || '';
     setIsLoading(true);
     getAssetImprovements('true', token, page, show, keyword, filters)
       .then((response) => {
-        setAsset(response?.data?.result);
+        handleSetAssets(response?.data?.result);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -111,6 +173,26 @@ const AssetLogByAssetId = () => {
 
     return currentStatus;
   };
+
+  const sortedAssets = [...(asset?.data || [])].sort((a, b) => {
+    if (a[sortConfig.key] < b[sortConfig.key]) {
+      return sortConfig.direction === 'asc' ? -1 : 1;
+    }
+    if (a[sortConfig.key] > b[sortConfig.key]) {
+      return sortConfig.direction === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+
+  const handleSort = (key: string) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const isAdmin = user?.role === 'admin-1' || user?.role === 'admin-2';
 
   return (
     <PageContainer
@@ -179,9 +261,12 @@ const AssetLogByAssetId = () => {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('no')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          No
+                          No &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
                       <TableCell
@@ -194,101 +279,162 @@ const AssetLogByAssetId = () => {
                           },
                           zIndex: 5
                         }}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('asset_code')}
                       >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Kode aset
+                          Kode aset &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('asset_uid')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Uid aset
+                          Uid aset &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('brand')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Merk
+                          Merk &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('name')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Nama aset
+                          Nama aset &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('asset_needed_date')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Waktu Aset Dibutuhkan
+                          Waktu Aset Dibutuhkan &nbsp;{' '}
+                          <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('report_date')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Tanggal Pelaporan
+                          Tanggal Pelaporan &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('urgency')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Urgensi
+                          Urgensi &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('description')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Deskripsi
+                          Deskripsi &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('reporter')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Pelapor
+                          Pelapor &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('contact_reporter')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Kontak Pelapor
+                          Kontak Pelapor &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() =>
+                          handleSort('validation_by_laboratory_date')
+                        }
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Tanggal Validasi Oleh Laboran
+                          Tanggal Validasi Oleh Laboran &nbsp;{' '}
+                          <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('type')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Jenis Perbaikan
+                          Jenis Perbaikan &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('technician_name')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Nama Teknisi
+                          Nama Teknisi &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('improvement_price')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Biaya Perbaikan
+                          Biaya Perbaikan &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('target_repair_date')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Target Waktu Perbaikan
+                          Target Waktu Perbaikan &nbsp;{' '}
+                          <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('actual_repair_start_date')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Realisasi Waktu Perbaikan
+                          Realisasi Waktu Perbaikan &nbsp;{' '}
+                          <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('actual_repair_end_date')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Realisasi Selesai
+                          Realisasi Selesai &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('actual_repair_day')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Durasi Perbaikan
+                          Durasi Perbaikan &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
-
-                      <TableCell>
+                      <TableCell
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('status')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Status Persetujuan
+                          Status Persetujuan &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -296,9 +442,13 @@ const AssetLogByAssetId = () => {
                           Dokumen
                         </Typography>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell
+                        align="right"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('user_name')}
+                      >
                         <Typography variant="subtitle2" fontWeight={600}>
-                          Dibuat oleh
+                          Dibuat oleh &nbsp; <IconArrowsSort size="15" />
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -306,21 +456,15 @@ const AssetLogByAssetId = () => {
                           Persetujuan
                         </Typography>
                       </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          Aksi
+                        </Typography>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {asset?.data?.map((asset: any, index: number) => {
-                      const actualRepairFinish = moment(
-                        new Date(asset?.actual_repair_end_date)
-                      );
-                      const actualRepairStart = moment(
-                        new Date(asset?.actual_repair_start_date)
-                      );
-                      const actualRepairDay = actualRepairFinish.diff(
-                        actualRepairStart,
-                        'days'
-                      );
-
+                    {sortedAssets?.map((asset: any) => {
                       return (
                         <TableRow key={asset?.id}>
                           <TableCell>
@@ -330,7 +474,7 @@ const AssetLogByAssetId = () => {
                                 fontWeight: '500'
                               }}
                             >
-                              {index + 1}
+                              {asset?.no}
                             </Typography>
                           </TableCell>
                           <TableCell
@@ -351,7 +495,7 @@ const AssetLogByAssetId = () => {
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
-                                #{asset?.asset?.asset_code}
+                                #{asset?.asset_code}
                               </Typography>
                             </Box>
                           </TableCell>
@@ -363,7 +507,7 @@ const AssetLogByAssetId = () => {
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
-                                #{asset?.asset?.asset_uid}
+                                #{asset?.asset_uid}
                               </Typography>
                             </Box>
                           </TableCell>
@@ -375,7 +519,7 @@ const AssetLogByAssetId = () => {
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
-                                {asset?.asset?.brand}
+                                {asset?.brand}
                               </Typography>
                             </Box>
                           </TableCell>
@@ -387,7 +531,7 @@ const AssetLogByAssetId = () => {
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
-                                {asset?.asset?.name}
+                                {asset?.name}
                               </Typography>
                             </Box>
                           </TableCell>
@@ -399,9 +543,7 @@ const AssetLogByAssetId = () => {
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
-                                {moment(
-                                  new Date(asset?.asset_needed_date)
-                                ).format('DD/MM/YYYY')}
+                                {asset?.asset_needed_date}
                               </Typography>
                             </Box>
                           </TableCell>
@@ -413,9 +555,7 @@ const AssetLogByAssetId = () => {
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
-                                {moment(new Date(asset?.report_date)).format(
-                                  'DD/MM/YYYY'
-                                )}
+                                {asset?.report_date}
                               </Typography>
                             </Box>
                           </TableCell>
@@ -475,9 +615,7 @@ const AssetLogByAssetId = () => {
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
-                                {moment(
-                                  new Date(asset?.validation_by_laboratory_date)
-                                ).format('DD/MM/YYYY')}
+                                {asset?.validation_by_laboratory_date}
                               </Typography>
                             </Box>
                           </TableCell>
@@ -513,7 +651,7 @@ const AssetLogByAssetId = () => {
                               }}
                             >
                               <Typography variant="subtitle2" fontWeight={600}>
-                                Rp {formatter.format(asset?.improvement_price)}
+                                Rp {asset?.improvement_price}
                               </Typography>
                             </Box>
                           </TableCell>
@@ -531,19 +669,21 @@ const AssetLogByAssetId = () => {
                                     variant="subtitle2"
                                     fontWeight={600}
                                   >
-                                    {moment(
-                                      new Date(asset?.target_repair_date)
-                                    ).format('DD/MM/YYYY')}
+                                    {asset?.target_repair_date}
                                   </Typography>
                                 </>
                               ) : (
                                 <>
-                                  <FormUpdateDate
-                                    assetId={asset?.asset?.id}
-                                    id={asset?.id}
-                                    name="target_repair_date"
-                                    onSuccess={() => refreshData()}
-                                  />
+                                  {asset?.status === 'Setuju' ? (
+                                    <FormUpdateDate
+                                      assetId={asset?.asset_id}
+                                      id={asset?.id}
+                                      name="target_repair_date"
+                                      onSuccess={() => refreshData()}
+                                    />
+                                  ) : (
+                                    '-'
+                                  )}
                                 </>
                               )}
                             </Box>
@@ -561,17 +701,21 @@ const AssetLogByAssetId = () => {
                                     variant="subtitle2"
                                     fontWeight={600}
                                   >
-                                    {actualRepairStart.format('DD/MM/YYYY')}
+                                    {asset?.actual_repair_start_date}
                                   </Typography>
                                 </>
                               ) : (
                                 <>
-                                  <FormUpdateDate
-                                    assetId={asset?.asset?.id}
-                                    id={asset?.id}
-                                    name="actual_repair_start_date"
-                                    onSuccess={() => refreshData()}
-                                  />
+                                  {asset?.status === 'Setuju' ? (
+                                    <FormUpdateDate
+                                      assetId={asset?.asset_id}
+                                      id={asset?.id}
+                                      name="actual_repair_start_date"
+                                      onSuccess={() => refreshData()}
+                                    />
+                                  ) : (
+                                    '-'
+                                  )}
                                 </>
                               )}
                             </Box>
@@ -589,17 +733,21 @@ const AssetLogByAssetId = () => {
                                     variant="subtitle2"
                                     fontWeight={600}
                                   >
-                                    {actualRepairFinish.format('DD/MM/YYYY')}
+                                    {asset?.actual_repair_end_date}
                                   </Typography>
                                 </>
                               ) : (
                                 <>
-                                  <FormUpdateDate
-                                    assetId={asset?.asset?.id}
-                                    id={asset?.id}
-                                    name="actual_repair_end_date"
-                                    onSuccess={() => refreshData()}
-                                  />
+                                  {asset?.status === 'Setuju' ? (
+                                    <FormUpdateDate
+                                      assetId={asset?.asset_id}
+                                      id={asset?.id}
+                                      name="actual_repair_end_date"
+                                      onSuccess={() => refreshData()}
+                                    />
+                                  ) : (
+                                    '-'
+                                  )}
                                 </>
                               )}
                             </Box>
@@ -614,7 +762,7 @@ const AssetLogByAssetId = () => {
                               <Typography variant="subtitle2" fontWeight={600}>
                                 {asset?.actual_repair_end_date &&
                                 asset?.actual_repair_start_date
-                                  ? `${actualRepairDay} Hari`
+                                  ? `${asset?.actual_repair_day} Hari`
                                   : '-'}
                               </Typography>
                             </Box>
@@ -639,16 +787,18 @@ const AssetLogByAssetId = () => {
                                 label={getAssetStatus(asset?.status)}
                               ></Chip>
                               {asset?.revision && (
-                                <HoverPopover
-                                  text={`Revisi: ${asset?.revision}`}
-                                >
-                                  <IconEye width="20" height="20" />
-                                </HoverPopover>
+                                <>
+                                  <HoverPopover
+                                    text={`Revisi: ${asset?.revision}`}
+                                  >
+                                    <IconEye width="20" height="20" />
+                                  </HoverPopover>
+                                </>
                               )}
                             </Stack>
                           </TableCell>
                           <TableCell>
-                            {asset?.additional_document && (
+                            {asset?.additional_document ? (
                               <Box
                                 sx={{
                                   display: 'flex',
@@ -662,6 +812,8 @@ const AssetLogByAssetId = () => {
                                   Cek Dokumen
                                 </Button>
                               </Box>
+                            ) : (
+                              '-'
                             )}
                           </TableCell>
 
@@ -671,26 +823,31 @@ const AssetLogByAssetId = () => {
                               variant="subtitle2"
                               fontWeight={400}
                             >
-                              {asset?.user?.name}
+                              {asset?.user_name}
                             </Typography>
                           </TableCell>
                           <TableCell>
-                            {user?.role === 'admin-1' ||
-                            user?.role === 'admin-2' ? (
+                            {isAdmin ? (
                               <>
-                                {asset?.approved_user?.name ? (
+                                {asset?.approved_user_name &&
+                                asset?.status === 'Setuju' ? (
                                   <>
                                     <Typography
                                       color="textSecondary"
                                       variant="subtitle2"
                                       fontWeight={400}
                                     >
-                                      {asset?.approved_user?.name}
+                                      {asset?.approved_user_name}
                                     </Typography>
                                   </>
                                 ) : (
                                   <>
-                                    <ModalApprove id={asset?.id} />
+                                    <ModalApprove
+                                      id={asset?.id}
+                                      status={asset?.status}
+                                      assetRevision={asset?.revision}
+                                      onSuccess={() => refreshData()}
+                                    />
                                   </>
                                 )}
                               </>
@@ -701,8 +858,21 @@ const AssetLogByAssetId = () => {
                                   variant="subtitle2"
                                   fontWeight={400}
                                 >
-                                  {asset?.approved_user?.name}
+                                  {asset?.approved_user_name &&
+                                  asset?.status === 'Setuju'
+                                    ? asset?.approved_user_name
+                                    : '-'}
                                 </Typography>
+                              </>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {asset?.status === 'Tolak' && (
+                              <>
+                                <ModalUpdateAssetLog
+                                  asset={asset}
+                                  onSuccess={() => refreshData()}
+                                />
                               </>
                             )}
                           </TableCell>
