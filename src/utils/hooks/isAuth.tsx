@@ -1,14 +1,15 @@
 import { fetchLoggedUser } from "@/networks/libs/auth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function useIsAuth() {
+  const [me, setMe] = useState<any>();
   const router = useRouter();
 
   const getLoggedUser = async (token: string) => {
     await fetchLoggedUser(token)
       .then((response) => {
-        // console.log(response);
+        setMe(response?.data?.result);
         router.push("/");
       })
       .catch((error) => {
@@ -22,4 +23,8 @@ export default function useIsAuth() {
       getLoggedUser(token || "");
     }
   }, []);
+
+  return {
+    me,
+  };
 }
