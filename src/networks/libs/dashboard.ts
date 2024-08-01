@@ -83,3 +83,34 @@ export function getPercentageRepairAsset(token: string, year: string) {
     config
   );
 }
+
+export function getTotalAssetStatusByCategory(token: string, year: string) {
+  let config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosClient.get(
+    `dashboard-kaur/total-asset-status-by-category?year=${year}`,
+    config
+  );
+}
+
+export function getAssetImprovementsAdminKaur(
+  isPaginate: string,
+  token: string,
+  page: string,
+  show: string,
+  year: string
+) {
+  let config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return axiosClient.get(
+    `/dashboard-kaur/asset-improvements?is_paginate=${isPaginate}&page=${page}&per_page=${show}&year=${year}`,
+    config
+  );
+}

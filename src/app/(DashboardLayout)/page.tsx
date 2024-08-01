@@ -10,11 +10,8 @@ import PageContainer from "@/app/(DashboardLayout)/components/container/PageCont
 // import MonthlyEarnings from "@/app/(DashboardLayout)/components/dashboard/MonthlyEarnings";
 import useIsAuth from "@/utils/hooks/isAuth";
 // import TotalAssetLab from "./components/dashboard/TotalAssetLab";
-import TotalAsset from "./components/dashboard/TotalAsset";
-import AverageSuccessLog from "./components/dashboard/AverageSuccessLog";
-import TotalImprovementPrice from "./components/dashboard/TotalImprovementPrice";
-import PercentageStatusLog from "./components/dashboard/PercentageStatusLog";
 import DashboardWadek from "./components/dashboard/DashboardWadek/DashboardWadek";
+import DashboardKaur from "./components/dashboard/DashboardKaur/DashboardKaur";
 
 const Dashboard = () => {
   const { me } = useIsAuth();
@@ -22,6 +19,8 @@ const Dashboard = () => {
     <PageContainer title="Dashboard" description="this is Dashboard">
       <Box>
         {me?.role === "admin-1" && <DashboardWadek />}
+        {me?.role === "admin-2" && <DashboardKaur />}
+
         {/* <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>
             <TotalAsset />
