@@ -12,6 +12,7 @@ import useIsAuth from "@/utils/hooks/isAuth";
 // import TotalAssetLab from "./components/dashboard/TotalAssetLab";
 import DashboardWadek from "./components/dashboard/DashboardWadek/DashboardWadek";
 import DashboardKaur from "./components/dashboard/DashboardKaur/DashboardKaur";
+import DashboardLaboran from "./components/dashboard/DashboardLaboran/DashboardLaboran";
 
 const Dashboard = () => {
   const { me } = useIsAuth();
@@ -20,6 +21,7 @@ const Dashboard = () => {
       <Box>
         {me?.role === "admin-1" && <DashboardWadek />}
         {me?.role === "admin-2" && <DashboardKaur />}
+        {me?.role === "user" && <DashboardLaboran />}
 
         {/* <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>

@@ -114,3 +114,29 @@ export function getAssetImprovementsAdminKaur(
     config
   );
 }
+
+export function getNearestSchedulesRepairAsset(token: string, year: string) {
+  let config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return axiosClient.get(
+    `/dashboard-laboran/nearest-schedules-repair-asset?year=${year}`,
+    config
+  );
+}
+
+export function getCurrentAssetRepairStatus(token: string, year: string) {
+  let config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return axiosClient.get(
+    `/dashboard-laboran/current-asset-repair-status?year=${year}`,
+    config
+  );
+}
