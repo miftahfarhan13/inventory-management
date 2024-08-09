@@ -58,7 +58,7 @@ const Sidebar = ({
                 mt="24px"
                 textAlign="center"
               >
-                🗂️ Manpes
+                🗂️ SIMAFRI
               </Typography>
             </Box>
             <Box>
@@ -96,7 +96,7 @@ const Sidebar = ({
           mt="24px"
           textAlign="center"
         >
-          🗂️ Manpes
+          🗂️ SIMAFRI
         </Typography>
       </Box>
       {/* ------------------------------------------- */}

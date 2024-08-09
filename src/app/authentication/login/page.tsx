@@ -51,7 +51,7 @@ const Login2 = () => {
                   mb="20px"
                   textAlign="center"
                 >
-                  🗂️ Manpes
+                  🗂️ SIMAFRI
                 </Typography>
               </Box>
               <AuthLogin

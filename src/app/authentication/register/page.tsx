@@ -48,7 +48,7 @@ const Register2 = () => (
                 mb="20px"
                 textAlign="center"
               >
-                🗂️ Manpes
+                🗂️ SIMAFRI
               </Typography>
             </Box>
             <AuthRegister
