@@ -48,6 +48,18 @@ export function getTotalAssetComparison(token: string, year: string) {
   );
 }
 
+export function getTotalGoodAsset(token: string, year: string) {
+  let config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosClient.get(
+    `/dashboard-wadek/get-total-good-asset?year=${year}`,
+    config
+  );
+}
+
 export function getRepairTimeAsset(token: string, year: string) {
   let config = {
     headers: {

@@ -1,4 +1,3 @@
-import useGetTotalAsset from "@/utils/hooks/useGetTotalAsset";
 import { Box, Card, Skeleton, Stack, Typography } from "@mui/material";
 import React from "react";
 import { Bar } from "react-chartjs-2";
@@ -11,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import useGetTotalGoodAsset from "@/utils/hooks/useGetTotalGoodAsset";
 
 ChartJS.register(
   CategoryScale,
@@ -21,12 +21,12 @@ ChartJS.register(
   Legend
 );
 
-interface TotalRepairAssetProps {
+interface TotalGoodAssetProps {
   year: string;
 }
 
-export default function TotalRepairAsset({ year }: TotalRepairAssetProps) {
-  const { data, isLoading } = useGetTotalAsset({ year });
+export default function TotalGoodAsset({ year }: TotalGoodAssetProps) {
+  const { data, isLoading } = useGetTotalGoodAsset({ year });
 
   return (
     <>
@@ -37,7 +37,7 @@ export default function TotalRepairAsset({ year }: TotalRepairAssetProps) {
           <Box p="20px" pr="40px">
             <Stack direction="column" spacing={2}>
               <Typography fontWeight="700" fontSize="20px">
-                Grafik Jumlah Aset Kondisi Perbaikan
+                Grafik Jumlah Aset Kondisi Baik
               </Typography>
 
               <Box height={300}>
