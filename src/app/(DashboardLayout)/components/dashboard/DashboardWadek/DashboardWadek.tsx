@@ -23,11 +23,13 @@ export default function DashboardWadek() {
   return (
     <>
       <style type="text/css" media="print">
-        {
-          "\
-        @page { size: landscape; }\
-      "
-        }
+        {`
+            @media print {
+              .print-container {
+                padding: 20px;
+              }
+            }
+        `}
       </style>
       <Stack direction="column" spacing={4} width="100%">
         <Stack
@@ -36,11 +38,7 @@ export default function DashboardWadek() {
           justifyContent="space-between"
           spacing={2}
         >
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={1}
-          >
+          <Stack direction="row" alignItems="center" spacing={1}>
             <Typography fontSize="20px" fontWeight="700">
               Dashboard
             </Typography>
@@ -55,7 +53,7 @@ export default function DashboardWadek() {
             />
           </Box>
         </Stack>
-        <Box ref={componentPdf}>
+        <Box className="print-container" ref={componentPdf}>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={6}>
               <TotalGoodAsset year={year} />
